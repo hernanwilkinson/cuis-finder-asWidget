@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4768] on 18 August 2021 at 10:12:16 pm'!
-'Description buildResults changed '!
-!provides: 'Tools-Finder' 1 46!
+'From Cuis 5.0 [latest update: #4966] on 11 November 2021 at 4:06:24 pm'!
+'Description innerChangeMorph changed '!
+!provides: 'Tools-Finder' 1 48!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -652,17 +652,17 @@ processKeyStroke
 	
 	self startStepping! !
 
-!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'NPM 5/9/2020 13:06:40'!
+!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 11/3/2021 20:29:26'!
 registerKeyStrokeHandler
 
-	^ searchBox textMorph
+	^ searchBox innerTextMorph 
 		setProperty: #'keyStroke:'
 		toValue: [ :event | self processKeyStroke ]! !
 
-!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'NPM 5/9/2020 13:04:54'!
+!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 11/3/2021 21:28:44'!
 unregisterKeyStrokeHandler
 
-	searchBox textMorph
+	searchBox innerTextMorph
 		removeProperty: #'keyStroke:'! !
 
 !FinderSearchBar methodsFor: 'initialization' stamp: 'NPM 5/9/2020 13:16:37'!
@@ -705,10 +705,10 @@ query
 	
 	^ searchBox text asString! !
 
-!FinderSearchBar methodsFor: 'accessing' stamp: 'NPM 5/3/2020 19:42:44'!
+!FinderSearchBar methodsFor: 'accessing' stamp: 'HAW 11/3/2021 20:29:36'!
 searchField
 	
-	^ searchBox textMorph! !
+	^ searchBox innerTextMorph ! !
 
 !FinderSearchBar methodsFor: 'accessing' stamp: 'NPM 5/9/2020 13:11:44'!
 timeSinceLastKeyStroke
@@ -1411,11 +1411,11 @@ doesNotUnderstand: aMessage
 
 	^ aMessage sendTo: textEditor! !
 
-!SearchBoxEditor class methodsFor: 'installing' stamp: 'NPM 5/3/2020 20:55:26'!
+!SearchBoxEditor class methodsFor: 'installing' stamp: 'HAW 11/3/2021 20:29:15'!
 installOn: aTextModelMorph handlingKeyStrokesWith: aKeyStrokeHandler  
 	
 	| newEditor textMorph |
-	textMorph _ aTextModelMorph textMorph.
+	textMorph _ aTextModelMorph innerTextMorph.
 	
 	newEditor _ self
 		forEditor: textMorph editor
