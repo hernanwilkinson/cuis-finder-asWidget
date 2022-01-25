@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4966] on 11 November 2021 at 4:06:24 pm'!
-'Description innerChangeMorph changed '!
-!provides: 'Tools-Finder' 1 48!
+'From Cuis 6.0 [latest update: #5045] on 25 January 2022 at 5:48:17 pm'!
+'Description Update due to renaming of WidgetMorph to BoxedMorph'!
+!provides: 'Tools-Finder' 1 49!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -47,7 +47,7 @@ FinderSearchTextModelMorph class
 	instanceVariableNames: ''!
 
 !classDefinition: #FinderSearchBar category: 'Tools-Finder-UI'!
-WidgetMorph subclass: #FinderSearchBar
+BoxedMorph subclass: #FinderSearchBar
 	instanceVariableNames: 'layoutMorph searchBox changeHandler keyPressedHandler dateAndTimeOfLastKeyStroke timeToWaitBeforeNotifyingChanges'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -1435,6 +1435,17 @@ forEditor: aTextEditor handlingKeyStrokesWith: aKeyStrokeHandler
 		initializeFor: aTextEditor
 		handlingKeyStrokesWith: aKeyStrokeHandler
 		! !
+
+!Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/24/2020 19:39:01'!
+openClassFinder
+	
+	|methodRef|
+	methodRef _ self valueOfFlag: #classFinder.
+	methodRef actualClass perform: methodRef selector! !
+
+!Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/14/2020 12:33:05'!
+setClassFinderTo: aBlock
+	self setPreference: #classFinder toValue: aBlock! !
 
 !Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/24/2020 19:39:01'!
 openClassFinder
