@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5045] on 25 January 2022 at 5:48:17 pm'!
-'Description Update due to renaming of WidgetMorph to BoxedMorph'!
-!provides: 'Tools-Finder' 1 49!
+'From Cuis 6.0 [latest update: #5096] on 27 April 2022 at 12:25:08 pm'!
+'Description Fixed when selecting a system category'!
+!provides: 'Tools-Finder' 1 50!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -922,16 +922,15 @@ processNonEmptySearchQuery: aQuery
 		valueFiltering: SystemOrganization categories
 		with: aQuery! !
 
-!PackagesCatalog methodsFor: 'browsing' stamp: 'NPM 4/2/2020 02:25:34'!
+!PackagesCatalog methodsFor: 'browsing' stamp: 'HAW 4/27/2022 12:21:12'!
 browse: aSystemCategoryName 
 	
-	
 	| newBrowser |
+	
 	newBrowser _ Browser new.
-			newBrowser systemCategoryListIndex: (newBrowser systemCategoryList indexOf: aSystemCategoryName).
+	newBrowser setSelectedSystemCategory: aSystemCategoryName.
 
-			BrowserWindow
-				open: newBrowser label: newBrowser defaultBrowserTitle! !
+	BrowserWindow open: newBrowser label: newBrowser defaultBrowserTitle! !
 
 !SendersCatalog methodsFor: 'searching' stamp: 'NPM 4/2/2020 02:30:48'!
 processNonEmptySearchQuery: aQuery 
@@ -1435,17 +1434,6 @@ forEditor: aTextEditor handlingKeyStrokesWith: aKeyStrokeHandler
 		initializeFor: aTextEditor
 		handlingKeyStrokesWith: aKeyStrokeHandler
 		! !
-
-!Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/24/2020 19:39:01'!
-openClassFinder
-	
-	|methodRef|
-	methodRef _ self valueOfFlag: #classFinder.
-	methodRef actualClass perform: methodRef selector! !
-
-!Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/14/2020 12:33:05'!
-setClassFinderTo: aBlock
-	self setPreference: #classFinder toValue: aBlock! !
 
 !Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/24/2020 19:39:01'!
 openClassFinder
