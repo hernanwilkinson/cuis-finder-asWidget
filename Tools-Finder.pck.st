@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5096] on 27 April 2022 at 12:25:08 pm'!
-'Description Fixed when selecting a system category'!
-!provides: 'Tools-Finder' 1 50!
+'From Cuis 6.0 [latest update: #5173] on 21 May 2022 at 8:17:02 pm'!
+'Description Sync with PreferencesNG'!
+!provides: 'Tools-Finder' 1 51!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -292,46 +292,6 @@ its #editor instance variable using reflection (see #installOn:mode: in my class
 Currently, TextEditor's keyboard shortcut mappings are shared among all instances and 
 cannot be modified/overriden for a particular instance (see Editor>>#shortcuts).!
 
-!Catalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:38:49'!
-name
-
-	self subclassResponsibility! !
-
-!ClassNamesCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:39:01'!
-name
-	
-	^ 'Classes'! !
-
-!CompositeCatalog methodsFor: 'accessing' stamp: 'NPM 4/1/2020 00:31:00'!
-name
-	
-	^ 'All'! !
-
-!ImplementedSelectorsCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:39:13'!
-name
-	
-	^ 'Selectors'! !
-
-!ImplementorsCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:47:38'!
-name
-	
-	^ 'Implementors'! !
-
-!PackagesCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 03:12:11'!
-name
-	
-	^ 'System categories'! !
-
-!SendersCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:54:18'!
-name
-	
-	^ 'Senders'! !
-
-!ToolsCatalog methodsFor: 'accessing' stamp: 'NPM 3/31/2020 19:09:53'!
-name
-	
-	^ 'Tools'! !
-
 !FinderMorph methodsFor: 'GUI building' stamp: 'MM 9/7/2020 11:38:33'!
 addToolbarButtonFor: catalog
 
@@ -542,7 +502,7 @@ browseSelectedResult
 defaultColor
 	^ Color veryVeryLightGray! !
 
-!FinderMorph methodsFor: 'initialization' stamp: 'MM 9/27/2020 20:48:15'!
+!FinderMorph methodsFor: 'initialization' stamp: 'HAW 5/21/2022 19:26:16'!
 openInWorld
 	super openInWorld.
 	self morphHeight: 300.
@@ -550,18 +510,18 @@ openInWorld
 	self comeToFront.
 
 	"Disable focusFollowsMouse while the finder is open."
-	focusFollowsMouse _ Preferences focusFollowsMouse.
-	focusFollowsMouse ifTrue: [Preferences disableFocusFollowsMouse].
+	focusFollowsMouse _ PreferenceNG at: #focusFollowsMouse.
+	focusFollowsMouse ifTrue: [PreferenceNG at: #focusFollowsMouse put: false].
 	"Set keyboard focus"
 	self world ifNotNil: [ :w |
 		w activeHand newKeyboardFocus: self submorphToFocusKeyboard ].
 	FinderMorph current: self.! !
 
-!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'MM 9/27/2020 21:01:07'!
+!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'HAW 5/21/2022 19:20:43'!
 delete
 	super delete.
 	FinderMorph current: nil.
-	focusFollowsMouse ifTrue: [Preferences enableFocusFollowsMouse].
+	focusFollowsMouse ifTrue: [PreferenceNG at: #focusFollowsMouse put: true ].
 	Display restore.! !
 
 !FinderMorph methodsFor: 'event handling testing' stamp: 'MM 9/25/2020 14:39:28'!
@@ -592,11 +552,11 @@ open
 		buildMorphicWindow;
 		openInWorld! !
 
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'HAW 3/9/2021 14:41:08'!
+!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'HAW 5/21/2022 18:20:57'!
 configureAsClassFinder
 	"self configureAsClassFinder"
 	
-	Preferences classFinder: [ self open ]! !
+	PreferenceNG name: #classFinder category: #programming value: [ self open ].! !
 
 !FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 9/7/2020 12:10:49'!
 current
@@ -759,6 +719,11 @@ onChanged: aChangeHandler onKeyPressed: aKeyPressedHandler notifyingChangesAfter
 			handlingKeysPressedWith: aKeyPressedHandler
 			notifyingChangesAfter: anAmountOfTime! !
 
+!Catalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:38:49'!
+name
+
+	self subclassResponsibility! !
+
 !Catalog methodsFor: 'searching' stamp: 'NPM 4/2/2020 02:29:31'!
 processEmptySearchQuery
 	
@@ -826,6 +791,11 @@ create
 	
 	^ self new! !
 
+!ClassNamesCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:39:01'!
+name
+	
+	^ 'Classes'! !
+
 !ClassNamesCatalog methodsFor: 'searching' stamp: 'NPM 4/2/2020 02:30:48'!
 processNonEmptySearchQuery: aQuery
 
@@ -841,6 +811,11 @@ browse: aClassName
 	
 	BrowserWindow
 		fullOnClass: class! !
+
+!CompositeCatalog methodsFor: 'accessing' stamp: 'NPM 4/1/2020 00:31:00'!
+name
+	
+	^ 'All'! !
 
 !CompositeCatalog methodsFor: 'initialization' stamp: 'NPM 4/1/2020 00:30:46'!
 initializeWithAll: children
@@ -876,6 +851,11 @@ withAll: children
 		new
 		initializeWithAll: children! !
 
+!ImplementedSelectorsCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:39:13'!
+name
+	
+	^ 'Selectors'! !
+
 !ImplementedSelectorsCatalog methodsFor: 'searching' stamp: 'NPM 4/2/2020 02:30:48'!
 processNonEmptySearchQuery: aQuery
 
@@ -887,6 +867,11 @@ processNonEmptySearchQuery: aQuery
 browse: aSelector
 
 	Smalltalk browseAllImplementorsOf: aSelector! !
+
+!ImplementorsCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:47:38'!
+name
+	
+	^ 'Implementors'! !
 
 !ImplementorsCatalog methodsFor: 'searching' stamp: 'NPM 5/24/2020 13:40:14'!
 processNonEmptySearchQuery: aQuery
@@ -915,6 +900,11 @@ initialize
 	
 	resultsSorter := ResultsSorter alphabetically, ResultsSorter bySelectorSize ! !
 
+!PackagesCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 03:12:11'!
+name
+	
+	^ 'System categories'! !
+
 !PackagesCatalog methodsFor: 'searching' stamp: 'NPM 4/2/2020 02:30:48'!
 processNonEmptySearchQuery: aQuery 
 	
@@ -932,6 +922,11 @@ browse: aSystemCategoryName
 
 	BrowserWindow open: newBrowser label: newBrowser defaultBrowserTitle! !
 
+!SendersCatalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:54:18'!
+name
+	
+	^ 'Senders'! !
+
 !SendersCatalog methodsFor: 'searching' stamp: 'NPM 4/2/2020 02:30:48'!
 processNonEmptySearchQuery: aQuery 
 	
@@ -943,6 +938,11 @@ browse: aMethodReference
 	HierarchyBrowserWindow
 		onClass: aMethodReference methodClass
 		selector: aMethodReference selector! !
+
+!ToolsCatalog methodsFor: 'accessing' stamp: 'NPM 3/31/2020 19:09:53'!
+name
+	
+	^ 'Tools'! !
 
 !ToolsCatalog methodsFor: 'initialization' stamp: 'NPM 4/4/2020 02:04:59'!
 initializeTools
@@ -1445,32 +1445,4 @@ openClassFinder
 !Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/14/2020 12:33:05'!
 setClassFinderTo: aBlock
 	self setPreference: #classFinder toValue: aBlock! !
-
-!KeyboardEvent methodsFor: '*Tools-Finder' stamp: 'MM 9/14/2020 12:11:08'!
-sentTo: aMorph localPosition: positionInAMorph
-	"Dispatch the receiver into anObject"
-	type == #keystroke ifTrue: [
-		(self shiftPressed and: [self keyValue = 13 ]) ifTrue: [
-			^ Preferences openClassFinder].
-		(self commandAltKeyPressed or: [ self controlKeyPressed ])
-			ifTrue: [
-				self keyValue = $w numericValue ifTrue: [
-					aMorph owningWindow ifNotNil: [ :w |
-						(w morphContainsPoint: (w internalizeFromWorld: self eventPosition)) ifTrue: [
-							w delete. 
-							^self ]]]].
-		^ aMorph
-			processKeystroke: self
-			localPosition: positionInAMorph ].
-	type == #keyDown ifTrue: [
-		^ aMorph
-			processKeyDown: self
-			localPosition: positionInAMorph ].
-	type == #keyUp ifTrue: [ 
-		^ aMorph
-			processKeyUp: self
-			localPosition: positionInAMorph ].
-	^ super
-		sentTo: aMorph
-		localPosition: positionInAMorph.! !
 FinderMorph initialize!
