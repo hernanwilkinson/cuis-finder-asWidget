@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5324] on 11 July 2022 at 8:13:15 pm'!
+'From Cuis 6.0 [latest update: #5387] on 11 July 2022 at 8:19:26 pm'!
 'Description Sync with PreferenceSet'!
-!provides: 'Tools-Finder' 1 53!
+!provides: 'Tools-Finder' 1 54!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -502,7 +502,7 @@ browseSelectedResult
 defaultColor
 	^ Color veryVeryLightGray! !
 
-!FinderMorph methodsFor: 'initialization' stamp: 'HAW 5/21/2022 19:26:16'!
+!FinderMorph methodsFor: 'initialization' stamp: 'HAW 7/11/2022 20:18:10'!
 openInWorld
 	super openInWorld.
 	self morphHeight: 300.
@@ -510,18 +510,18 @@ openInWorld
 	self comeToFront.
 
 	"Disable focusFollowsMouse while the finder is open."
-	focusFollowsMouse _ PreferenceNG at: #focusFollowsMouse.
-	focusFollowsMouse ifTrue: [PreferenceNG at: #focusFollowsMouse put: false].
+	focusFollowsMouse _ Preferences at: #focusFollowsMouse.
+	focusFollowsMouse ifTrue: [Preferences at: #focusFollowsMouse put: false].
 	"Set keyboard focus"
 	self world ifNotNil: [ :w |
 		w activeHand newKeyboardFocus: self submorphToFocusKeyboard ].
 	FinderMorph current: self.! !
 
-!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'HAW 5/21/2022 19:20:43'!
+!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'HAW 7/11/2022 20:18:03'!
 delete
 	super delete.
 	FinderMorph current: nil.
-	focusFollowsMouse ifTrue: [PreferenceNG at: #focusFollowsMouse put: true ].
+	focusFollowsMouse ifTrue: [Preferences at: #focusFollowsMouse put: true ].
 	Display restore.! !
 
 !FinderMorph methodsFor: 'event handling testing' stamp: 'MM 9/25/2020 14:39:28'!
