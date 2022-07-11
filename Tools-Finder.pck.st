@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5173] on 21 May 2022 at 8:17:02 pm'!
-'Description Sync with PreferencesNG'!
-!provides: 'Tools-Finder' 1 51!
+'From Cuis 6.0 [latest update: #5324] on 11 July 2022 at 7:58:20 pm'!
+'Description Sync with PreferenceSet'!
+!provides: 'Tools-Finder' 1 52!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -1434,15 +1434,4 @@ forEditor: aTextEditor handlingKeyStrokesWith: aKeyStrokeHandler
 		initializeFor: aTextEditor
 		handlingKeyStrokesWith: aKeyStrokeHandler
 		! !
-
-!Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/24/2020 19:39:01'!
-openClassFinder
-	
-	|methodRef|
-	methodRef _ self valueOfFlag: #classFinder.
-	methodRef actualClass perform: methodRef selector! !
-
-!Preferences class methodsFor: '*Tools-Finder' stamp: 'MM 9/14/2020 12:33:05'!
-setClassFinderTo: aBlock
-	self setPreference: #classFinder toValue: aBlock! !
 FinderMorph initialize!
