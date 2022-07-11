@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5324] on 11 July 2022 at 7:58:20 pm'!
+'From Cuis 6.0 [latest update: #5324] on 11 July 2022 at 8:13:15 pm'!
 'Description Sync with PreferenceSet'!
-!provides: 'Tools-Finder' 1 52!
+!provides: 'Tools-Finder' 1 53!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -552,11 +552,11 @@ open
 		buildMorphicWindow;
 		openInWorld! !
 
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'HAW 5/21/2022 18:20:57'!
+!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'HAW 7/11/2022 20:13:08'!
 configureAsClassFinder
 	"self configureAsClassFinder"
 	
-	PreferenceNG name: #classFinder category: #programming value: [ self open ].! !
+	Preferences name: #classFinder category: #programming value: [ self open ].! !
 
 !FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 9/7/2020 12:10:49'!
 current
