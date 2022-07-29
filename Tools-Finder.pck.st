@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5387] on 11 July 2022 at 8:19:26 pm'!
-'Description Sync with PreferenceSet'!
-!provides: 'Tools-Finder' 1 54!
+'From Cuis 6.0 [latest update: #5401] on 29 July 2022 at 12:29:15 pm'!
+'Description New submenu options'!
+!provides: 'Tools-Finder' 1 56!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -984,31 +984,40 @@ toolNames
 
 	^ tools keysSortedSafely! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'NPM 4/4/2020 01:48:12'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 7/28/2022 19:03:52'!
 addToolFrom: aMenuItem 
 	
 	tools
 		at: (self labelFor: aMenuItem)
-		put: [ (aMenuItem first at: #object) perform: (aMenuItem first at: #selector) ]! !
+		put: [ (aMenuItem at: #object) perform: (aMenuItem at: #selector) ]! !
 
 !ToolsCatalog methodsFor: 'tools' stamp: 'NPM 4/4/2020 01:47:55'!
 blockForSortingItemsByLabel
 	
 	^ [ :aMenuItem :anotherMenuItem | (self labelFor: aMenuItem) <= (self labelFor: anotherMenuItem) ]! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'NPM 4/4/2020 01:47:24'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 7/28/2022 19:02:30'!
 labelFor: aMenuItem
 
-	^ aMenuItem first at: #label! !
+	^ aMenuItem at: #label! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'NPM 4/4/2020 01:49:39'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 7/28/2022 19:03:06'!
 menuItemsForOpenGroup
 
-	^ (ImplementorsCatalog new search: #worldMenuForOpenGroup)
+	| openMenuOptions worldMenuOptions |
+	
+	worldMenuOptions := (ImplementorsCatalog new search: #worldMenuOptions)
 		collect: [ :implementor |
 				implementor compiledMethod
 					valueWithReceiver: implementor
-					methodClass arguments: {} ]! !
+					methodClass arguments: {} ].
+	openMenuOptions := worldMenuOptions 
+		inject: OrderedCollection new
+		into: [ :result :options | 
+			result addAll: (options select: [ :option | (option at: #submenuOf ifAbsent: [ '' ]) = TheWorldMenu openLabel ]).
+			result ].
+		
+	^openMenuOptions ! !
 
 !ToolsCatalog class methodsFor: 'instance creation' stamp: 'NPM 4/4/2020 02:04:14'!
 create
