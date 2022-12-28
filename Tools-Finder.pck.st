@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5401] on 29 July 2022 at 12:29:15 pm'!
-'Description New submenu options'!
-!provides: 'Tools-Finder' 1 56!
+'From Cuis 6.0 [latest update: #5510] on 28 December 2022 at 10:45:51 am'!
+'Description New color scheme'!
+!provides: 'Tools-Finder' 1 57!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -313,7 +313,7 @@ buildMorphicWindow
 	self buildResults.
 	self buildLayout.! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'HAW 8/18/2021 22:11:13'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'HAW 12/23/2022 09:25:28'!
 buildResults
 
 	results := (FinderResultsListMorph 
@@ -321,11 +321,14 @@ buildResults
 		listGetter: #results
 		indexGetter: #selectedResultIndex
 		indexSetter: #selectedResultIndex:)
-		color: Color veryVeryLightGray ;
+		color: Color veryVeryLightGray;
 		autoDeselect: false;
 		setProperty: #click:localPosition:
 		toValue: [ :aMouseEvent :localEventPosition | self browseResultAt: localEventPosition ];
-		yourself! !
+		yourself.
+	
+	results verticalScrollBar color: Theme current defaultWindowColor.
+	results horizontalScrollBar color: Theme current defaultWindowColor.! !
 
 !FinderMorph methodsFor: 'GUI building' stamp: 'MM 9/25/2020 14:42:33'!
 buildSearchBar
@@ -340,10 +343,10 @@ buildSearchBar
 	
 	! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 9/7/2020 12:35:28'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 11/2/2022 12:37:35'!
 buildToolbar
 	
-	toolbar := LayoutMorph newRow color: Color veryVeryLightGray ; yourself.
+	toolbar := LayoutMorph newRow color: Theme current finderSearchBarToolbarColor; yourself.
 	
 	self buildToolbarButtonsForCatalogs.! !
 
@@ -362,7 +365,7 @@ defaultButtonPaneHeight
 layoutMorph
 	^ self! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 9/7/2020 12:40:13'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 11/2/2022 12:43:14'!
 toolbarButtonFor: aCatalog
 
 	^ (PluggableButtonMorph
@@ -370,8 +373,12 @@ toolbarButtonFor: aCatalog
 		stateGetter: #isSelected
 		action: #value
 		label: aCatalog name)
-		color: Color veryLightGray; 
+		color: Theme current finderSearchBarToolbarButtonColor; 
 		yourself! !
+
+!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 11/2/2022 11:15:49'!
+windowColor
+	^ Theme current browser! !
 
 !FinderMorph methodsFor: 'top window' stamp: 'MM 9/7/2020 11:38:33'!
 submorphToFocusKeyboard
@@ -498,9 +505,9 @@ browseSelectedResult
 	self delete.
 	model browseSelectedResult.! !
 
-!FinderMorph methodsFor: 'initialization' stamp: 'MM 9/7/2020 22:40:48'!
+!FinderMorph methodsFor: 'initialization' stamp: 'PTP 11/2/2022 11:13:03'!
 defaultColor
-	^ Color veryVeryLightGray! !
+	^ Theme current defaultWindowColor ! !
 
 !FinderMorph methodsFor: 'initialization' stamp: 'HAW 7/11/2022 20:18:10'!
 openInWorld
@@ -644,11 +651,12 @@ initializeLayout
 	
 	self addMorph: layoutMorph.! !
 
-!FinderSearchBar methodsFor: 'initialization' stamp: 'MM 9/25/2020 14:44:13'!
+!FinderSearchBar methodsFor: 'initialization' stamp: 'PTP 11/2/2022 12:54:07'!
 initializeSearchBox
 
 	searchBox := (FinderSearchTextModelMorph withText: '').
 	searchBox askBeforeDiscardingEdits: false.
+	searchBox color: Theme current finderSearchBarSearchBoxColor.
 	
 	layoutMorph addMorphUseAll: searchBox.! !
 
@@ -1443,4 +1451,52 @@ forEditor: aTextEditor handlingKeyStrokesWith: aKeyStrokeHandler
 		initializeFor: aTextEditor
 		handlingKeyStrokesWith: aKeyStrokeHandler
 		! !
+
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 11/2/2022 12:51:25'!
+finderSearchBarResultsColor
+	"Answer the FinderSearchBar color."
+
+	^ self paneBackgroundFrom: self defaultWindowColor lighter.! !
+
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 11/2/2022 12:54:26'!
+finderSearchBarSearchBoxColor
+	"Answer the FinderSearchBar results color."
+
+	^ self paneBackgroundFrom: self defaultWindowColor lighter lighter.! !
+
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 11/2/2022 12:43:06'!
+finderSearchBarToolbarButtonColor
+	"Answer the FinderSearchBar toolbar button color."
+
+	^ self buttonColorFrom: self defaultWindowColor.! !
+
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 11/2/2022 12:44:42'!
+finderSearchBarToolbarColor
+	"Answer the FinderSearchBar toolbar button color."
+
+	^ self buttonColorFrom: self defaultWindowColor.! !
+
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 11/2/2022 12:51:06'!
+finderSearchBarResultsColor
+	"Answer the FinderSearchBar color."
+
+	^ `Color veryVeryLightGray`! !
+
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 11/2/2022 12:54:01'!
+finderSearchBarSearchBoxColor
+	"Answer the FinderSearchBar results color."
+
+	^ self textPane.! !
+
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 11/2/2022 12:42:08'!
+finderSearchBarToolbarButtonColor
+	"Answer the FinderSearchBar toolbar button color."
+
+	^ `Color veryLightGray`.! !
+
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'HAW 12/22/2022 16:55:22'!
+finderSearchBarToolbarColor
+	"Answer the FinderSearchBar toolbar button color."
+
+	^ `Color veryVeryLightGray`! !
 FinderMorph initialize!
