@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5510] on 28 December 2022 at 10:45:51 am'!
-'Description New color scheme'!
-!provides: 'Tools-Finder' 1 57!
+'From Cuis 6.0 [latest update: #5657] on 14 March 2023 at 12:04:38 pm'!
+'Description Size proportional to button size'!
+!provides: 'Tools-Finder' 1 58!
 SystemOrganization addCategory: 'Tools-Finder-Model'!
 SystemOrganization addCategory: 'Tools-Finder-UI'!
 SystemOrganization addCategory: 'Tools-Finder-UI-Model'!
@@ -509,10 +509,10 @@ browseSelectedResult
 defaultColor
 	^ Theme current defaultWindowColor ! !
 
-!FinderMorph methodsFor: 'initialization' stamp: 'HAW 7/11/2022 20:18:10'!
+!FinderMorph methodsFor: 'initialization' stamp: 'HAW 3/14/2023 12:02:46'!
 openInWorld
 	super openInWorld.
-	self morphHeight: 300.
+	self morphHeight: self defaultButtonPaneHeight * 9.
 	self morphPositionInWorld: ((self runningWorld morphWidth / 2)  - (self morphWidth / 2)) @ 200.
 	self comeToFront.
 
