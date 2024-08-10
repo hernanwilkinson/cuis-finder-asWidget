@@ -1,6 +1,6 @@
-'From Cuis6.3 [latest update: #6350] on 15 June 2024 at 7:57:47 pm'!
-'Description Add dragable bar'!
-!provides: 'Tools-Finder' 1 59!
+'From Cuis7.1 [latest update: #6578] on 10 August 2024 at 4:47:21 pm'!
+'Description Updated to Cuis7.1'!
+!provides: 'Tools-Finder' 1 60!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -319,19 +319,19 @@ buildMorphicWindow
 	self buildResults.
 	self buildLayout.! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'HAW 12/23/2022 09:25:28'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'jmv 7/19/2024 13:02:24'!
 buildResults
 
 	results := (FinderResultsListMorph 
-		model: model
+		withModel: model
 		listGetter: #results
 		indexGetter: #selectedResultIndex
 		indexSetter: #selectedResultIndex:)
-		color: Color veryVeryLightGray;
-		autoDeselect: false;
-		setProperty: #click:localPosition:
-		toValue: [ :aMouseEvent :localEventPosition | self browseResultAt: localEventPosition ];
-		yourself.
+			color: Color veryVeryLightGray;
+			autoDeselect: false;
+			setProperty: #click:localPosition:
+			toValue: [ :aMouseEvent :localEventPosition | self browseResultAt: localEventPosition ];
+			yourself.
 	
 	results verticalScrollBar color: Theme current defaultWindowColor.
 	results horizontalScrollBar color: Theme current defaultWindowColor.! !
