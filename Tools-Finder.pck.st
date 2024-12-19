@@ -47,7 +47,7 @@ FinderSearchTextModelMorph class
 	instanceVariableNames: ''!
 
 !classDefinition: #FinderSearchBar category: #'Tools-Finder-UI'!
-BoxedMorph subclass: #FinderSearchBar
+BoxMorph subclass: #FinderSearchBar
 	instanceVariableNames: 'layoutMorph searchBox changeHandler keyPressedHandler dateAndTimeOfLastKeyStroke timeToWaitBeforeNotifyingChanges'
 	classVariableNames: ''
 	poolDictionaries: ''
