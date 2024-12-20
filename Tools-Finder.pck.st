@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6578] on 10 August 2024 at 4:47:21 pm'!
-'Description Updated to Cuis7.1'!
-!provides: 'Tools-Finder' 1 60!
+'From Cuis7.3 [latest update: #6938] on 20 December 2024 at 3:04:57 am'!
+'Description Updated to Cuis7.3'!
+!provides: 'Tools-Finder' 1 61!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -14,16 +14,6 @@ LayoutMorph subclass: #FinderMorph
 	category: 'Tools-Finder-UI'!
 !classDefinition: 'FinderMorph class' category: #'Tools-Finder-UI'!
 FinderMorph class
-	instanceVariableNames: ''!
-
-!classDefinition: #FinderSearchInnerTextMorph category: #'Tools-Finder-UI'!
-InnerTextMorph subclass: #FinderSearchInnerTextMorph
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Tools-Finder-UI'!
-!classDefinition: 'FinderSearchInnerTextMorph class' category: #'Tools-Finder-UI'!
-FinderSearchInnerTextMorph class
 	instanceVariableNames: ''!
 
 !classDefinition: #FinderResultsListMorph category: #'Tools-Finder-UI'!
@@ -47,13 +37,23 @@ FinderSearchTextModelMorph class
 	instanceVariableNames: ''!
 
 !classDefinition: #FinderSearchBar category: #'Tools-Finder-UI'!
-BoxedMorph subclass: #FinderSearchBar
+BorderedBoxMorph subclass: #FinderSearchBar
 	instanceVariableNames: 'layoutMorph searchBox changeHandler keyPressedHandler dateAndTimeOfLastKeyStroke timeToWaitBeforeNotifyingChanges'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Tools-Finder-UI'!
 !classDefinition: 'FinderSearchBar class' category: #'Tools-Finder-UI'!
 FinderSearchBar class
+	instanceVariableNames: ''!
+
+!classDefinition: #FinderSearchInnerTextMorph category: #'Tools-Finder-UI'!
+InnerTextMorph subclass: #FinderSearchInnerTextMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Tools-Finder-UI'!
+!classDefinition: 'FinderSearchInnerTextMorph class' category: #'Tools-Finder-UI'!
+FinderSearchInnerTextMorph class
 	instanceVariableNames: ''!
 
 !classDefinition: #Catalog category: #'Tools-Finder-Model'!
@@ -515,15 +515,15 @@ browseSelectedResult
 defaultColor
 	^ Theme current defaultWindowColor ! !
 
-!FinderMorph methodsFor: 'initialization' stamp: 'HAW 3/14/2023 12:02:46'!
+!FinderMorph methodsFor: 'initialization' stamp: 'Ez3 12/20/2024 02:58:21'!
 openInWorld
 	super openInWorld.
 	self morphHeight: self defaultButtonPaneHeight * 9.
-	self morphPositionInWorld: ((self runningWorld morphWidth / 2)  - (self morphWidth / 2)) @ 200.
+	self positionInWorld: ((self runningWorld morphWidth / 2)  - (self morphWidth / 2)) @ 200.
 	self comeToFront.
 
 	"Disable focusFollowsMouse while the finder is open."
-	focusFollowsMouse _ Preferences at: #focusFollowsMouse.
+	focusFollowsMouse := Preferences at: #focusFollowsMouse.
 	focusFollowsMouse ifTrue: [Preferences at: #focusFollowsMouse put: false].
 	"Set keyboard focus"
 	self world ifNotNil: [ :w |
@@ -583,13 +583,6 @@ current: anInstance
 isFindClassShortcut: aKeyboardEvent
 
 	^ aKeyboardEvent shiftPressed and: [ aKeyboardEvent isReturnKey ]! !
-
-!FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'MM 9/25/2020 14:49:37'!
-keyboardFocusChange: aBoolean
-	"Notify change due to green border for keyboard focus"
-	aBoolean ifFalse: [
-		"Not pretty at all, but works. Delete the FinderMorph"
-		self owner owner owner owner delete].! !
 
 !FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:23:26'!
 gainFocusFrom: aHand
@@ -696,12 +689,12 @@ delete
 	
 	^ super delete.! !
 
-!FinderSearchBar methodsFor: 'layout' stamp: 'MM 9/25/2020 14:41:12'!
+!FinderSearchBar methodsFor: 'layout' stamp: 'Ez3 12/20/2024 02:57:00'!
 layoutSubmorphs
 	
 	layoutMorph
-		morphPosition: 0@0
-		extent: self morphExtent.! !
+		position: 0@0
+		extent: self morphExtent! !
 
 !FinderSearchBar methodsFor: 'stepping' stamp: 'HAW 6/30/2020 09:31:12'!
 stepAt: millisecondSinceLast
@@ -732,6 +725,13 @@ onChanged: aChangeHandler onKeyPressed: aKeyPressedHandler notifyingChangesAfter
 			initializeHandlingChangesWith: aChangeHandler
 			handlingKeysPressedWith: aKeyPressedHandler
 			notifyingChangesAfter: anAmountOfTime! !
+
+!FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'MM 9/25/2020 14:49:37'!
+keyboardFocusChange: aBoolean
+	"Notify change due to green border for keyboard focus"
+	aBoolean ifFalse: [
+		"Not pretty at all, but works. Delete the FinderMorph"
+		self owner owner owner owner delete].! !
 
 !Catalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:38:49'!
 name
@@ -817,14 +817,14 @@ processNonEmptySearchQuery: aQuery
 		valueFiltering: Smalltalk classNames
 		with: aQuery! !
 
-!ClassNamesCatalog methodsFor: 'browsing' stamp: 'NPM 4/2/2020 02:25:34'!
+!ClassNamesCatalog methodsFor: 'browsing' stamp: 'Ez3 12/20/2024 03:03:24'!
 browse: aClassName 
 	
 	| class |
 	class := (Smalltalk classNamed: aClassName).
 	
 	BrowserWindow
-		fullOnClass: class! !
+		fullOnClass: class selector: nil! !
 
 !CompositeCatalog methodsFor: 'accessing' stamp: 'NPM 4/1/2020 00:31:00'!
 name
