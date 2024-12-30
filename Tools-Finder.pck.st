@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #6959] on 30 December 2024 at 5:46:24 pm'!
+'From Cuis7.3 [latest update: #6959] on 30 December 2024 at 8:16:06 pm'!
 'Description Updated to Cuis7.3'!
-!provides: 'Tools-Finder' 1 61!
+!provides: 'Tools-Finder' 1 62!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -297,10 +297,15 @@ addToolbarButtonFor: catalog
 
 	^ toolbar addMorph: (self toolbarButtonFor: catalog )! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'HAW 6/15/2024 19:57:03'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'HAW 12/30/2024 19:17:56'!
 buildDragBar
 
-	self layoutMorph addMorph: LayoutMorph newRow proportionalHeight: 0.05! !
+	|draggingBar|
+	
+	draggingBar := LayoutMorph newRow.
+	draggingBar addMorph: (LabelMorph contents: 'Finder').
+	
+	self layoutMorph addMorph: draggingBar proportionalHeight: 0.15! !
 
 !FinderMorph methodsFor: 'GUI building' stamp: 'MM 9/7/2020 11:38:33'!
 buildLayout
