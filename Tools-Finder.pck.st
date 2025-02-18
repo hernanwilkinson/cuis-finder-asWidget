@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #6959] on 30 December 2024 at 8:16:06 pm'!
-'Description Updated to Cuis7.3'!
-!provides: 'Tools-Finder' 1 62!
+'From Cuis7.3 [latest update: #7036] on 18 February 2025 at 5:08:26 pm'!
+'Description Updated to Cuis7.x'!
+!provides: 'Tools-Finder' 1 63!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -14,6 +14,16 @@ LayoutMorph subclass: #FinderMorph
 	category: 'Tools-Finder-UI'!
 !classDefinition: 'FinderMorph class' category: #'Tools-Finder-UI'!
 FinderMorph class
+	instanceVariableNames: ''!
+
+!classDefinition: #FinderSearchBar category: #'Tools-Finder-UI'!
+LayoutMorph subclass: #FinderSearchBar
+	instanceVariableNames: 'searchBox changeHandler keyPressedHandler dateAndTimeOfLastKeyStroke timeToWaitBeforeNotifyingChanges'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Tools-Finder-UI'!
+!classDefinition: 'FinderSearchBar class' category: #'Tools-Finder-UI'!
+FinderSearchBar class
 	instanceVariableNames: ''!
 
 !classDefinition: #FinderResultsListMorph category: #'Tools-Finder-UI'!
@@ -34,16 +44,6 @@ TextModelMorph subclass: #FinderSearchTextModelMorph
 	category: 'Tools-Finder-UI'!
 !classDefinition: 'FinderSearchTextModelMorph class' category: #'Tools-Finder-UI'!
 FinderSearchTextModelMorph class
-	instanceVariableNames: ''!
-
-!classDefinition: #FinderSearchBar category: #'Tools-Finder-UI'!
-BorderedBoxMorph subclass: #FinderSearchBar
-	instanceVariableNames: 'layoutMorph searchBox changeHandler keyPressedHandler dateAndTimeOfLastKeyStroke timeToWaitBeforeNotifyingChanges'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Tools-Finder-UI'!
-!classDefinition: 'FinderSearchBar class' category: #'Tools-Finder-UI'!
-FinderSearchBar class
 	instanceVariableNames: ''!
 
 !classDefinition: #FinderSearchInnerTextMorph category: #'Tools-Finder-UI'!
@@ -237,9 +237,6 @@ SearchBoxEditor class
 	instanceVariableNames: ''!
 
 
-!FinderResultsListMorph commentStamp: '<historical>' prior: 0!
-Custom list morph for showing finder results that disables keyboard focus.!
-
 !FinderSearchBar commentStamp: 'NPM 5/9/2020 13:51:51' prior: 0!
 I am responsible for capturing the query to be performed.
 
@@ -255,6 +252,9 @@ To implement shortcuts, I use SearchBoxEditor (see #initializeSearchBoxEditor an
 
 
 !
+
+!FinderResultsListMorph commentStamp: '<historical>' prior: 0!
+Custom list morph for showing finder results that disables keyboard focus.!
 
 !ToolsCatalog commentStamp: '<historical>' prior: 0!
 I am a catalog that contains all tools available in the World > Open... menu.
@@ -589,27 +589,6 @@ isFindClassShortcut: aKeyboardEvent
 
 	^ aKeyboardEvent shiftPressed and: [ aKeyboardEvent isReturnKey ]! !
 
-!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:23:26'!
-gainFocusFrom: aHand
-! !
-
-!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:20:15'!
-mouseEnter: event! !
-
-!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:21:34'!
-mouseLeave: evt! !
-
-!FinderResultsListMorph methodsFor: 'event handling testing' stamp: 'MM 9/25/2020 14:15:57'!
-handlesKeyboard
-	^ false! !
-
-!FinderSearchTextModelMorph methodsFor: 'initialization' stamp: 'MM 9/25/2020 14:43:52'!
-innerMorphClass
-	^ FinderSearchInnerTextMorph! !
-
-!FinderSearchTextModelMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:48:53'!
-mouseLeave: evt! !
-
 !FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 6/30/2020 09:31:20'!
 notifyQueryChanged
 
@@ -636,33 +615,25 @@ unregisterKeyStrokeHandler
 	searchBox innerTextMorph
 		removeProperty: #'keyStroke:'! !
 
-!FinderSearchBar methodsFor: 'initialization' stamp: 'NPM 5/9/2020 13:16:37'!
+!FinderSearchBar methodsFor: 'initialization' stamp: 'HAW 2/18/2025 17:06:18'!
 initializeHandlingChangesWith: aChangeHandler handlingKeysPressedWith: aKeyPressedHandler notifyingChangesAfter: anAmountOfTime  
 	
 	changeHandler := aChangeHandler.
 	keyPressedHandler := aKeyPressedHandler.
 	timeToWaitBeforeNotifyingChanges := anAmountOfTime.
 	
-	self initializeLayout.
 	self initializeSearchBox.
 	self initializeSearchBoxEditor.
 	self registerKeyStrokeHandler.! !
 
-!FinderSearchBar methodsFor: 'initialization' stamp: 'NPM 5/3/2020 20:24:51'!
-initializeLayout
-
-	layoutMorph := LayoutMorph newColumn.
-	
-	self addMorph: layoutMorph.! !
-
-!FinderSearchBar methodsFor: 'initialization' stamp: 'PTP 11/2/2022 12:54:07'!
+!FinderSearchBar methodsFor: 'initialization' stamp: 'HAW 2/18/2025 17:05:13'!
 initializeSearchBox
 
 	searchBox := (FinderSearchTextModelMorph withText: '').
 	searchBox askBeforeDiscardingEdits: false.
 	searchBox color: Theme current finderSearchBarSearchBoxColor.
 	
-	layoutMorph addMorphUseAll: searchBox.! !
+	self addMorphUseAll: searchBox.! !
 
 !FinderSearchBar methodsFor: 'initialization' stamp: 'NPM 5/3/2020 21:02:26'!
 initializeSearchBoxEditor
@@ -694,13 +665,6 @@ delete
 	
 	^ super delete.! !
 
-!FinderSearchBar methodsFor: 'layout' stamp: 'Ez3 12/20/2024 02:57:00'!
-layoutSubmorphs
-	
-	layoutMorph
-		position: 0@0
-		extent: self morphExtent! !
-
 !FinderSearchBar methodsFor: 'stepping' stamp: 'HAW 6/30/2020 09:31:12'!
 stepAt: millisecondSinceLast
 
@@ -722,14 +686,35 @@ stepTime
 
 	^ timeToWaitBeforeNotifyingChanges totalMilliseconds! !
 
-!FinderSearchBar class methodsFor: 'instance creation' stamp: 'NPM 5/9/2020 13:31:18'!
+!FinderSearchBar class methodsFor: 'instance creation' stamp: 'HAW 2/18/2025 17:04:37'!
 onChanged: aChangeHandler onKeyPressed: aKeyPressedHandler notifyingChangesAfter: anAmountOfTime  
 	
 	^ self
-		new
+		newRow
 			initializeHandlingChangesWith: aChangeHandler
 			handlingKeysPressedWith: aKeyPressedHandler
 			notifyingChangesAfter: anAmountOfTime! !
+
+!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:23:26'!
+gainFocusFrom: aHand
+! !
+
+!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:20:15'!
+mouseEnter: event! !
+
+!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:21:34'!
+mouseLeave: evt! !
+
+!FinderResultsListMorph methodsFor: 'event handling testing' stamp: 'MM 9/25/2020 14:15:57'!
+handlesKeyboard
+	^ false! !
+
+!FinderSearchTextModelMorph methodsFor: 'initialization' stamp: 'MM 9/25/2020 14:43:52'!
+innerMorphClass
+	^ FinderSearchInnerTextMorph! !
+
+!FinderSearchTextModelMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:48:53'!
+mouseLeave: evt! !
 
 !FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'MM 9/25/2020 14:49:37'!
 keyboardFocusChange: aBoolean
