@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7036] on 18 February 2025 at 5:08:26 pm'!
-'Description Updated to Cuis7.x'!
-!provides: 'Tools-Finder' 1 63!
+'From Cuis7.3 [latest update: #7036] on 25 February 2025 at 7:27:33 pm'!
+'Description Avoid deleting the World'!
+!provides: 'Tools-Finder' 1 64!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -716,12 +716,11 @@ innerMorphClass
 !FinderSearchTextModelMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:48:53'!
 mouseLeave: evt! !
 
-!FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'MM 9/25/2020 14:49:37'!
+!FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'HAW 2/25/2025 19:24:43'!
 keyboardFocusChange: aBoolean
 	"Notify change due to green border for keyboard focus"
 	aBoolean ifFalse: [
-		"Not pretty at all, but works. Delete the FinderMorph"
-		self owner owner owner owner delete].! !
+		(self firstOwnerSuchThat: [ :m | m class ==  FinderMorph]) delete.].! !
 
 !Catalog methodsFor: 'accessing' stamp: 'NPM 3/28/2020 02:38:49'!
 name
