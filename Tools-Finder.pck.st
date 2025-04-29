@@ -1,6 +1,6 @@
-'From Cuis7.3 [latest update: #7036] on 25 February 2025 at 7:27:33 pm'!
-'Description Avoid deleting the World'!
-!provides: 'Tools-Finder' 1 64!
+'From Cuis7.3 [latest update: #7108] on 29 April 2025 at 3:28:18 pm'!
+'Description Allow to open tools when menu references self'!
+!provides: 'Tools-Finder' 1 65!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -1004,16 +1004,16 @@ labelFor: aMenuItem
 
 	^ aMenuItem at: #label! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 7/28/2022 19:03:06'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 4/29/2025 15:26:45'!
 menuItemsForOpenGroup
 
 	| openMenuOptions worldMenuOptions |
 	
 	worldMenuOptions := (ImplementorsCatalog new search: #worldMenuOptions)
 		collect: [ :implementor |
-				implementor compiledMethod
-					valueWithReceiver: implementor
-					methodClass arguments: {} ].
+			implementor compiledMethod
+				valueWithReceiver: implementor methodClass theNonMetaClass 
+				arguments: {} ].
 	openMenuOptions := worldMenuOptions 
 		inject: OrderedCollection new
 		into: [ :result :options | 
