@@ -1,13 +1,13 @@
-'From Cuis7.3 [latest update: #7108] on 29 April 2025 at 3:28:18 pm'!
-'Description Allow to open tools when menu references self'!
-!provides: 'Tools-Finder' 1 65!
+'From Cuis7.5 [latest update: #7383] on 25 July 2025 at 6:00:11 pm'!
+'Description Subclasses LinearLayourMorph instead of LayoutMorph'!
+!provides: 'Tools-Finder' 1 66!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
 
 
 !classDefinition: #FinderMorph category: #'Tools-Finder-UI'!
-LayoutMorph subclass: #FinderMorph
+LinearLayoutMorph subclass: #FinderMorph
 	instanceVariableNames: 'toolbar searchBar results model focusFollowsMouse dragBar'
 	classVariableNames: 'CurrentFinder'
 	poolDictionaries: ''
@@ -17,7 +17,7 @@ FinderMorph class
 	instanceVariableNames: ''!
 
 !classDefinition: #FinderSearchBar category: #'Tools-Finder-UI'!
-LayoutMorph subclass: #FinderSearchBar
+LinearLayoutMorph subclass: #FinderSearchBar
 	instanceVariableNames: 'searchBox changeHandler keyPressedHandler dateAndTimeOfLastKeyStroke timeToWaitBeforeNotifyingChanges'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -686,14 +686,13 @@ stepTime
 
 	^ timeToWaitBeforeNotifyingChanges totalMilliseconds! !
 
-!FinderSearchBar class methodsFor: 'instance creation' stamp: 'HAW 2/18/2025 17:04:37'!
+!FinderSearchBar class methodsFor: 'instance creation' stamp: 'HAW 7/25/2025 17:50:02'!
 onChanged: aChangeHandler onKeyPressed: aKeyPressedHandler notifyingChangesAfter: anAmountOfTime  
 	
-	^ self
-		newRow
-			initializeHandlingChangesWith: aChangeHandler
-			handlingKeysPressedWith: aKeyPressedHandler
-			notifyingChangesAfter: anAmountOfTime! !
+	^ self newRow
+		initializeHandlingChangesWith: aChangeHandler
+		handlingKeysPressedWith: aKeyPressedHandler
+		notifyingChangesAfter: anAmountOfTime! !
 
 !FinderResultsListMorph methodsFor: 'events' stamp: 'MM 9/25/2020 14:23:26'!
 gainFocusFrom: aHand
