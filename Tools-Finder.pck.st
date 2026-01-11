@@ -1,6 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 11:12:40 pm'!
-'Description Replace FinderSearchBar>>#delete to FinderSearchBar>>#clearDependencyAndEvents. #delete is not recursive, and when #delete is sent to a Morph, the recursive method that is called to all morphs is #clearDependencyAndEvents.'!
-!provides: 'Tools-Finder' 1 74!
+'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 11:15:25 pm'!
+'Description Classify class methods in Finder class side'!
+!provides: 'Tools-Finder' 1 75!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -526,6 +526,24 @@ initialize
 
 	self configureAsClassFinder.! !
 
+!FinderMorph class methodsFor: 'class initialization private' stamp: 'HAW 11/Jul/2022 20:13:08'!
+configureAsClassFinder
+	"self configureAsClassFinder"
+	
+	Preferences name: #classFinder category: #programming value: [ self open ].! !
+
+!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020 12:10:49'!
+current
+	^ CurrentFinder! !
+
+!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020 12:11:06'!
+current: anInstance
+	CurrentFinder _ anInstance! !
+
+!FinderMorph class methodsFor: 'current finder' stamp: 'JEC 10/Jan/2026 23:03:46'!
+deleteCurrent
+	CurrentFinder := nil! !
+
 !FinderMorph class methodsFor: 'instance creation' stamp: 'MM 7/Sep/2020 11:42:47'!
 open
 	
@@ -533,24 +551,6 @@ open
 		model: Finder withDefaultCatalogs;
 		buildMorphicWindow;
 		openInWorld! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'HAW 11/Jul/2022 20:13:08'!
-configureAsClassFinder
-	"self configureAsClassFinder"
-	
-	Preferences name: #classFinder category: #programming value: [ self open ].! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 7/Sep/2020 12:10:49'!
-current
-	^ CurrentFinder! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 7/Sep/2020 12:11:06'!
-current: anInstance
-	CurrentFinder _ anInstance! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'JEC 10/Jan/2026 23:03:46'!
-deleteCurrent
-	CurrentFinder := nil! !
 
 !FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 30/Jun/2020 09:31:20'!
 notifyQueryChanged
