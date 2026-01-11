@@ -1,6 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 10:54:38 pm'!
-'Description Deleted #windowColor message. Was not used.'!
-!provides: 'Tools-Finder' 1 71!
+'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 11:01:12 pm'!
+'Description Deleted #isFindClassShortcut: message. It was not used.'!
+!provides: 'Tools-Finder' 1 72!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -501,12 +501,12 @@ openInWorld
 		w activeHand newKeyboardFocus: self submorphToFocusKeyboard ].
 	FinderMorph current: self.! !
 
-!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'HAW 11/Jul/2022 20:18:03'!
+!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 22:59:06'!
 delete
-	super delete.
+
 	FinderMorph current: nil.
 	focusFollowsMouse ifTrue: [Preferences at: #focusFollowsMouse put: true ].
-	Display restore.! !
+	super delete.! !
 
 !FinderMorph methodsFor: 'event handling testing' stamp: 'MM 25/Sep/2020 14:39:28'!
 handlesKeyboard
@@ -549,11 +549,6 @@ current
 !FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 7/Sep/2020 12:11:06'!
 current: anInstance
 	CurrentFinder _ anInstance! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 8/Sep/2020 17:48:34'!
-isFindClassShortcut: aKeyboardEvent
-
-	^ aKeyboardEvent shiftPressed and: [ aKeyboardEvent isReturnKey ]! !
 
 !FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 30/Jun/2020 09:31:20'!
 notifyQueryChanged
