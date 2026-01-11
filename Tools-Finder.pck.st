@@ -1,7 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 7 January 2026 at 5:18:19 pm'!
-'Description Fix: left and right arrow keys moves the cursor and not between the categories.
-Removed #update: #isCloseEvent:ifTrue: and #isBrowseSelectedResultEvent:ifTrue:. #update: was not used and the next two were used only inside #update:. Also this had a problem: if this were used it would throw and exception because they were sending a message that only knows the SystemWindows'!
-!provides: 'Tools-Finder' 1 70!
+'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 10:54:38 pm'!
+'Description Deleted #windowColor message. Was not used.'!
+!provides: 'Tools-Finder' 1 71!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -387,10 +386,6 @@ toolbarButtonFor: aCatalog
 		label: aCatalog name)
 		color: Theme current finderSearchBarToolbarButtonColor; 
 		yourself! !
-
-!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 2/Nov/2022 11:15:49'!
-windowColor
-	^ Theme current browser! !
 
 !FinderMorph methodsFor: 'top window' stamp: 'MM 7/Sep/2020 11:38:33'!
 submorphToFocusKeyboard
