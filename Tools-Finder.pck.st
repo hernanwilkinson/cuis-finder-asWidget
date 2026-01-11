@@ -1,6 +1,7 @@
-'From Cuis7.7 [latest update: #7791] on 7 January 2026 at 5:14:48 pm'!
-'Description Change package to the new way to show dates.'!
-!provides: 'Tools-Finder' 1 67!
+'From Cuis7.7 [latest update: #7791] on 7 January 2026 at 5:18:19 pm'!
+'Description Fix: left and right arrow keys moves the cursor and not between the categories.
+Removed #update: #isCloseEvent:ifTrue: and #isBrowseSelectedResultEvent:ifTrue:. #update: was not used and the next two were used only inside #update:. Also this had a problem: if this were used it would throw and exception because they were sending a message that only knows the SystemWindows'!
+!provides: 'Tools-Finder' 1 70!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -396,39 +397,12 @@ submorphToFocusKeyboard
 
 	^ searchBar searchField! !
 
-!FinderMorph methodsFor: 'events-old protocol' stamp: 'MM 7/Sep/2020 11:38:33'!
-update: aSymbol
-
-	model
-		isBrowseSelectedResultEvent: aSymbol
-		ifTrue:  [ ^ self closeBoxHit ].
-		
-	model
-		isCloseEvent: aSymbol
-		ifTrue:  [ ^ self closeBoxHit ].! !
-
 !FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 11:38:33'!
 forwardToResults: aKeyboardEvent
 
 	^ (results arrowKey: aKeyboardEvent)
 		isNil not
 ! !
-
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 20:35:32'!
-processArrowLeftOrRight: aKeyboardEvent 
-	
-	aKeyboardEvent isArrowLeft 
-		ifTrue: [ 
-			model selectPreviousCatalog.
-			^ true ].
-		
-	aKeyboardEvent isArrowRight 
-		ifTrue: [ 
-			model selectNextCatalog.
-			^ true ].
-
-	^ false
-	! !
 
 !FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 11:38:33'!
 processArrowUpOrDown: aKeyboardEvent 
@@ -458,7 +432,7 @@ processEscKey: aKeyboardEvent
 		
 	^ aKeyboardEvent isEsc! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 20:34:34'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 6/Jan/2026 17:21:19'!
 processKeyStroke: aKeyboardEvent 
 	
 	(self processTab: aKeyboardEvent)
@@ -466,9 +440,6 @@ processKeyStroke: aKeyboardEvent
 	
 	(self processArrowUpOrDown: aKeyboardEvent)
 		ifTrue: [ ^ true ].
-		
-	(self processArrowLeftOrRight: aKeyboardEvent)
-		ifTrue: [^true].
 		
 	(self processReturnKey: aKeyboardEvent)
 		ifTrue: [ ^ true ].
@@ -1163,18 +1134,6 @@ initializeWithAll: aCollectionOfCatalogs
 	self initializeResults.
 	self initializeCatalogs: aCollectionOfCatalogs.	
 	self initializeEventNames.! !
-
-!Finder methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020 01:04:08'!
-isBrowseSelectedResultEvent: anEvent ifTrue: aBlock
-	
-	anEvent = browseSelectedResultEvent
-		ifTrue: aBlock! !
-
-!Finder methodsFor: 'events-old protocol' stamp: 'NPM 20/Apr/2020 17:06:25'!
-isCloseEvent: anEvent ifTrue: aBlock
-
-	anEvent = closeEvent
-		ifTrue: aBlock! !
 
 !Finder methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020 01:05:06'!
 isSelectedCatalogChange: anEvent ifTrue: aBlock
