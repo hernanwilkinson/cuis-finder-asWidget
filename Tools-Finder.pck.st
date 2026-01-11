@@ -1,6 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 11:01:12 pm'!
-'Description Deleted #isFindClassShortcut: message. It was not used.'!
-!provides: 'Tools-Finder' 1 72!
+'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 11:12:40 pm'!
+'Description Replace FinderSearchBar>>#delete to FinderSearchBar>>#clearDependencyAndEvents. #delete is not recursive, and when #delete is sent to a Morph, the recursive method that is called to all morphs is #clearDependencyAndEvents.'!
+!provides: 'Tools-Finder' 1 74!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -415,16 +415,12 @@ processArrowUpOrDown: aKeyboardEvent
 	^ false
 	! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 12:08:12'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 10/Jan/2026 23:05:49'!
 processEscKey: aKeyboardEvent
 
-	(aKeyboardEvent isEsc)
-		ifTrue: [ 
-			model close. 
-			self delete. 
-			self runningWorld activeHand newKeyboardFocus: self runningWorld.
-			FinderMorph current: nil].
-		
+	aKeyboardEvent isEsc 
+		ifTrue: [ self delete ].
+
 	^ aKeyboardEvent isEsc! !
 
 !FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 6/Jan/2026 17:21:19'!
@@ -501,11 +497,13 @@ openInWorld
 		w activeHand newKeyboardFocus: self submorphToFocusKeyboard ].
 	FinderMorph current: self.! !
 
-!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 22:59:06'!
+!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 23:05:21'!
 delete
 
-	FinderMorph current: nil.
+	model close.
+	self class deleteCurrent.
 	focusFollowsMouse ifTrue: [Preferences at: #focusFollowsMouse put: true ].
+	self runningWorld activeHand newKeyboardFocus: self runningWorld.
 	super delete.! !
 
 !FinderMorph methodsFor: 'event handling testing' stamp: 'MM 25/Sep/2020 14:39:28'!
@@ -549,6 +547,10 @@ current
 !FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 7/Sep/2020 12:11:06'!
 current: anInstance
 	CurrentFinder _ anInstance! !
+
+!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'JEC 10/Jan/2026 23:03:46'!
+deleteCurrent
+	CurrentFinder := nil! !
 
 !FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 30/Jun/2020 09:31:20'!
 notifyQueryChanged
@@ -619,12 +621,12 @@ timeSinceLastKeyStroke
 
 	^ DateAndTime now - dateAndTimeOfLastKeyStroke! !
 
-!FinderSearchBar methodsFor: 'submorphs-add/remove' stamp: 'NPM 9/May/2020 13:04:54'!
-delete
+!FinderSearchBar methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 23:10:49'!
+clearDependencyAndEvents
 
 	self unregisterKeyStrokeHandler.
 	
-	^ super delete.! !
+	^ super clearDependencyAndEvents.! !
 
 !FinderSearchBar methodsFor: 'stepping' stamp: 'HAW 30/Jun/2020 09:31:12'!
 stepAt: millisecondSinceLast
