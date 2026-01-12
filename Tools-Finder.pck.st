@@ -1,7 +1,6 @@
-'From Cuis7.7 [latest update: #7791] on 7 January 2026 at 5:18:19 pm'!
-'Description Fix: left and right arrow keys moves the cursor and not between the categories.
-Removed #update: #isCloseEvent:ifTrue: and #isBrowseSelectedResultEvent:ifTrue:. #update: was not used and the next two were used only inside #update:. Also this had a problem: if this were used it would throw and exception because they were sending a message that only knows the SystemWindows'!
-!provides: 'Tools-Finder' 1 70!
+'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 11:15:25 pm'!
+'Description Classify class methods in Finder class side'!
+!provides: 'Tools-Finder' 1 75!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
@@ -388,10 +387,6 @@ toolbarButtonFor: aCatalog
 		color: Theme current finderSearchBarToolbarButtonColor; 
 		yourself! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 2/Nov/2022 11:15:49'!
-windowColor
-	^ Theme current browser! !
-
 !FinderMorph methodsFor: 'top window' stamp: 'MM 7/Sep/2020 11:38:33'!
 submorphToFocusKeyboard
 
@@ -420,16 +415,12 @@ processArrowUpOrDown: aKeyboardEvent
 	^ false
 	! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 12:08:12'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 10/Jan/2026 23:05:49'!
 processEscKey: aKeyboardEvent
 
-	(aKeyboardEvent isEsc)
-		ifTrue: [ 
-			model close. 
-			self delete. 
-			self runningWorld activeHand newKeyboardFocus: self runningWorld.
-			FinderMorph current: nil].
-		
+	aKeyboardEvent isEsc 
+		ifTrue: [ self delete ].
+
 	^ aKeyboardEvent isEsc! !
 
 !FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 6/Jan/2026 17:21:19'!
@@ -506,12 +497,14 @@ openInWorld
 		w activeHand newKeyboardFocus: self submorphToFocusKeyboard ].
 	FinderMorph current: self.! !
 
-!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'HAW 11/Jul/2022 20:18:03'!
+!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 23:05:21'!
 delete
-	super delete.
-	FinderMorph current: nil.
+
+	model close.
+	self class deleteCurrent.
 	focusFollowsMouse ifTrue: [Preferences at: #focusFollowsMouse put: true ].
-	Display restore.! !
+	self runningWorld activeHand newKeyboardFocus: self runningWorld.
+	super delete.! !
 
 !FinderMorph methodsFor: 'event handling testing' stamp: 'MM 25/Sep/2020 14:39:28'!
 handlesKeyboard
@@ -533,6 +526,24 @@ initialize
 
 	self configureAsClassFinder.! !
 
+!FinderMorph class methodsFor: 'class initialization private' stamp: 'HAW 11/Jul/2022 20:13:08'!
+configureAsClassFinder
+	"self configureAsClassFinder"
+	
+	Preferences name: #classFinder category: #programming value: [ self open ].! !
+
+!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020 12:10:49'!
+current
+	^ CurrentFinder! !
+
+!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020 12:11:06'!
+current: anInstance
+	CurrentFinder _ anInstance! !
+
+!FinderMorph class methodsFor: 'current finder' stamp: 'JEC 10/Jan/2026 23:03:46'!
+deleteCurrent
+	CurrentFinder := nil! !
+
 !FinderMorph class methodsFor: 'instance creation' stamp: 'MM 7/Sep/2020 11:42:47'!
 open
 	
@@ -540,25 +551,6 @@ open
 		model: Finder withDefaultCatalogs;
 		buildMorphicWindow;
 		openInWorld! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'HAW 11/Jul/2022 20:13:08'!
-configureAsClassFinder
-	"self configureAsClassFinder"
-	
-	Preferences name: #classFinder category: #programming value: [ self open ].! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 7/Sep/2020 12:10:49'!
-current
-	^ CurrentFinder! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 7/Sep/2020 12:11:06'!
-current: anInstance
-	CurrentFinder _ anInstance! !
-
-!FinderMorph class methodsFor: 'as yet unclassified' stamp: 'MM 8/Sep/2020 17:48:34'!
-isFindClassShortcut: aKeyboardEvent
-
-	^ aKeyboardEvent shiftPressed and: [ aKeyboardEvent isReturnKey ]! !
 
 !FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 30/Jun/2020 09:31:20'!
 notifyQueryChanged
@@ -629,12 +621,12 @@ timeSinceLastKeyStroke
 
 	^ DateAndTime now - dateAndTimeOfLastKeyStroke! !
 
-!FinderSearchBar methodsFor: 'submorphs-add/remove' stamp: 'NPM 9/May/2020 13:04:54'!
-delete
+!FinderSearchBar methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 23:10:49'!
+clearDependencyAndEvents
 
 	self unregisterKeyStrokeHandler.
 	
-	^ super delete.! !
+	^ super clearDependencyAndEvents.! !
 
 !FinderSearchBar methodsFor: 'stepping' stamp: 'HAW 30/Jun/2020 09:31:12'!
 stepAt: millisecondSinceLast
