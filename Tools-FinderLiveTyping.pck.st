@@ -1,6 +1,7 @@
-'From Cuis7.7 [latest update: #7791] on 12 January 2026 at 5:09:21 pm'!
+'From Cuis7.7 [latest update: #7791] on 12 January 2026 at 5:13:43 pm'!
 'Description '!
-!provides: 'Tools-FinderLiveTyping' 1 0!
+!provides: 'Tools-FinderLiveTyping' 1 1!
+!requires: 'Tools-Finder' 1 76 nil!
 
 
 
