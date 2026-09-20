@@ -1,9 +1,10 @@
-'From Cuis7.7 [latest update: #7791] on 10 January 2026 at 11:15:25 pm'!
-'Description Classify class methods in Finder class side'!
-!provides: 'Tools-Finder' 1 75!
+'From Cuis7.9 [latest update: #8184] on 19 September 2026 at 9:12:51 pm'!
+'Description Keep the finder open when one of its buttons is clicked'!
+!provides: 'Tools-Finder' 1 76!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
+SystemOrganization addCategory: #'Tools-Finder-Tests'!
 
 
 !classDefinition: #FinderMorph category: #'Tools-Finder-UI'!
@@ -236,6 +237,16 @@ Object subclass: #SearchBoxEditor
 SearchBoxEditor class
 	instanceVariableNames: ''!
 
+!classDefinition: #FinderMorphTest category: #'Tools-Finder-Tests'!
+TestCase subclass: #FinderMorphTest
+	instanceVariableNames: 'finder hand'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Tools-Finder-Tests'!
+!classDefinition: 'FinderMorphTest class' category: #'Tools-Finder-Tests'!
+FinderMorphTest class
+	instanceVariableNames: ''!
+
 
 !FinderSearchBar commentStamp: 'NPM 5/9/2020 13:51:51' prior: 0!
 I am responsible for capturing the query to be performed.
@@ -292,12 +303,12 @@ its #editor instance variable using reflection (see #installOn:mode: in my class
 Currently, TextEditor's keyboard shortcut mappings are shared among all instances and 
 cannot be modified/overriden for a particular instance (see Editor>>#shortcuts).!
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020 11:38:33'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020, 2:38:33 pm (UTC)'!
 addToolbarButtonFor: catalog
 
 	^ toolbar addMorph: (self toolbarButtonFor: catalog )! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'HAW 30/Dec/2024 19:17:56'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'HAW 30/Dec/2024, 10:17:56 pm (UTC)'!
 buildDragBar
 
 	|draggingBar|
@@ -307,7 +318,7 @@ buildDragBar
 	
 	self layoutMorph addMorph: draggingBar proportionalHeight: 0.15! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020 11:38:33'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020, 2:38:33 pm (UTC)'!
 buildLayout
 
 	^ self layoutMorph
@@ -316,7 +327,7 @@ buildLayout
 		addMorph: searchBar fixedHeight: self defaultButtonPaneHeight;
 		addMorphUseAll: results! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'kdpm 19/May/2024 08:51:03'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'kdpm 19/May/2024, 11:51:03 am (UTC)'!
 buildMorphicWindow
 	self buildDragBar.
 	self buildToolbar.
@@ -324,7 +335,7 @@ buildMorphicWindow
 	self buildResults.
 	self buildLayout.! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'jmv 19/Jul/2024 13:02:24'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'jmv 19/Jul/2024, 4:02:24 pm (UTC)'!
 buildResults
 
 	results := (FinderResultsListMorph 
@@ -341,7 +352,7 @@ buildResults
 	results verticalScrollBar color: Theme current defaultWindowColor.
 	results horizontalScrollBar color: Theme current defaultWindowColor.! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 25/Sep/2020 14:42:33'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'MM 25/Sep/2020, 5:42:33 pm (UTC)'!
 buildSearchBar
 	
 	searchBar := FinderSearchBar
@@ -354,29 +365,29 @@ buildSearchBar
 	
 	! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 2/Nov/2022 12:37:35'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 2/Nov/2022, 3:37:35 pm (UTC)'!
 buildToolbar
 	
 	toolbar := LayoutMorph newRow color: Theme current finderSearchBarToolbarColor; yourself.
 	
 	self buildToolbarButtonsForCatalogs.! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020 11:38:33'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020, 2:38:33 pm (UTC)'!
 buildToolbarButtonsForCatalogs
 
 	^ model catalogsDo: [ :catalog | self addToolbarButtonFor: catalog ]! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020 11:43:47'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020, 2:43:47 pm (UTC)'!
 defaultButtonPaneHeight
 	"Answer the user's preferred default height for new button panes."
 
 	^ Theme current buttonPaneHeight! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020 11:38:54'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'MM 7/Sep/2020, 2:38:54 pm (UTC)'!
 layoutMorph
 	^ self! !
 
-!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 2/Nov/2022 12:43:14'!
+!FinderMorph methodsFor: 'GUI building' stamp: 'PTP 2/Nov/2022, 3:43:14 pm (UTC)'!
 toolbarButtonFor: aCatalog
 
 	^ (PluggableButtonMorph
@@ -387,19 +398,19 @@ toolbarButtonFor: aCatalog
 		color: Theme current finderSearchBarToolbarButtonColor; 
 		yourself! !
 
-!FinderMorph methodsFor: 'top window' stamp: 'MM 7/Sep/2020 11:38:33'!
+!FinderMorph methodsFor: 'top window' stamp: 'MM 7/Sep/2020, 2:38:33 pm (UTC)'!
 submorphToFocusKeyboard
 
 	^ searchBar searchField! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 11:38:33'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020, 2:38:33 pm (UTC)'!
 forwardToResults: aKeyboardEvent
 
 	^ (results arrowKey: aKeyboardEvent)
 		isNil not
 ! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 11:38:33'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020, 2:38:33 pm (UTC)'!
 processArrowUpOrDown: aKeyboardEvent 
 	
 	aKeyboardEvent isArrowUp 
@@ -415,7 +426,7 @@ processArrowUpOrDown: aKeyboardEvent
 	^ false
 	! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 10/Jan/2026 23:05:49'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 11/Jan/2026, 2:05:49 am (UTC)'!
 processEscKey: aKeyboardEvent
 
 	aKeyboardEvent isEsc 
@@ -423,7 +434,7 @@ processEscKey: aKeyboardEvent
 
 	^ aKeyboardEvent isEsc! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 6/Jan/2026 17:21:19'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'JEC 6/Jan/2026, 8:21:19 pm (UTC)'!
 processKeyStroke: aKeyboardEvent 
 	
 	(self processTab: aKeyboardEvent)
@@ -443,7 +454,7 @@ processKeyStroke: aKeyboardEvent
 		
 	^ false! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 12:28:27'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020, 3:28:27 pm (UTC)'!
 processReturnKey: aKeyboardEvent
 
 	(aKeyboardEvent isReturnKey)
@@ -453,7 +464,7 @@ processReturnKey: aKeyboardEvent
 		
 	^ aKeyboardEvent isReturnKey! !
 
-!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020 11:38:33'!
+!FinderMorph methodsFor: 'shortcuts' stamp: 'MM 7/Sep/2020, 2:38:33 pm (UTC)'!
 processTab: aKeyboardEvent 
 	
 	aKeyboardEvent isTab
@@ -464,7 +475,7 @@ processTab: aKeyboardEvent
 	
 	^ aKeyboardEvent isTab! !
 
-!FinderMorph methodsFor: 'browsing' stamp: 'MM 7/Sep/2020 12:30:44'!
+!FinderMorph methodsFor: 'browsing' stamp: 'MM 7/Sep/2020, 3:30:44 pm (UTC)'!
 browseResultAt: aPosition 
 	
 	model
@@ -473,16 +484,16 @@ browseResultAt: aPosition
 			
 			! !
 
-!FinderMorph methodsFor: 'browsing' stamp: 'MM 7/Sep/2020 12:28:56'!
+!FinderMorph methodsFor: 'browsing' stamp: 'MM 7/Sep/2020, 3:28:56 pm (UTC)'!
 browseSelectedResult
 	self delete.
 	model browseSelectedResult.! !
 
-!FinderMorph methodsFor: 'initialization' stamp: 'PTP 2/Nov/2022 11:13:03'!
+!FinderMorph methodsFor: 'initialization' stamp: 'PTP 2/Nov/2022, 2:13:03 pm (UTC)'!
 defaultColor
 	^ Theme current defaultWindowColor ! !
 
-!FinderMorph methodsFor: 'initialization' stamp: 'Ez3 20/Dec/2024 02:58:21'!
+!FinderMorph methodsFor: 'initialization' stamp: 'Ez3 20/Dec/2024, 5:58:21 am (UTC)'!
 openInWorld
 	super openInWorld.
 	self morphHeight: self defaultButtonPaneHeight * 9.
@@ -497,7 +508,7 @@ openInWorld
 		w activeHand newKeyboardFocus: self submorphToFocusKeyboard ].
 	FinderMorph current: self.! !
 
-!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 23:05:21'!
+!FinderMorph methodsFor: 'submorphs-add/remove' stamp: 'JEC 11/Jan/2026, 2:05:21 am (UTC)'!
 delete
 
 	model close.
@@ -506,45 +517,67 @@ delete
 	self runningWorld activeHand newKeyboardFocus: self runningWorld.
 	super delete.! !
 
-!FinderMorph methodsFor: 'event handling testing' stamp: 'MM 25/Sep/2020 14:39:28'!
+!FinderMorph methodsFor: 'event handling testing' stamp: 'MM 25/Sep/2020, 5:39:28 pm (UTC)'!
 handlesKeyboard
 	^ true! !
 
-!FinderMorph methodsFor: 'model' stamp: 'MM 7/Sep/2020 11:42:16'!
+!FinderMorph methodsFor: 'model' stamp: 'MM 7/Sep/2020, 2:42:16 pm (UTC)'!
 model
 	
 	^ model! !
 
-!FinderMorph methodsFor: 'model' stamp: 'MM 7/Sep/2020 11:42:06'!
+!FinderMorph methodsFor: 'model' stamp: 'MM 7/Sep/2020, 2:42:06 pm (UTC)'!
 model: anObject
 
 	model _ anObject
 	! !
 
-!FinderMorph class methodsFor: 'class initialization' stamp: 'MM 24/Sep/2020 19:40:27'!
+!FinderMorph methodsFor: 'keyboard focus' stamp: 'HAW 19/Sep/2026, 11:36:51 pm (UTC)'!
+focusSearchField
+
+	self world activeHand newKeyboardFocus: self submorphToFocusKeyboard! !
+
+!FinderMorph methodsFor: 'keyboard focus' stamp: 'HAW 19/Sep/2026, 11:36:51 pm (UTC)'!
+isKeyboardFocusInside
+
+	^self world activeHand keyboardFocus
+		ifNil: [ false ]
+		ifNotNil: [ :focusedMorph | focusedMorph hasOwner: self ]! !
+
+!FinderMorph methodsFor: 'keyboard focus' stamp: 'HAW 19/Sep/2026, 11:36:51 pm (UTC)'!
+searchFieldLostKeyboardFocus
+
+	"A click on one of my buttons or on my results takes the keyboard focus from the search field as
+	much as a click outside me does, and only the last one closes me."
+
+	self isKeyboardFocusInside
+		ifTrue: [ self focusSearchField ]
+		ifFalse: [ self delete ]! !
+
+!FinderMorph class methodsFor: 'class initialization' stamp: 'MM 24/Sep/2020, 10:40:27 pm (UTC)'!
 initialize
 
 	self configureAsClassFinder.! !
 
-!FinderMorph class methodsFor: 'class initialization private' stamp: 'HAW 11/Jul/2022 20:13:08'!
+!FinderMorph class methodsFor: 'class initialization private' stamp: 'HAW 11/Jul/2022, 11:13:08 pm (UTC)'!
 configureAsClassFinder
 	"self configureAsClassFinder"
 	
 	Preferences name: #classFinder category: #programming value: [ self open ].! !
 
-!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020 12:10:49'!
+!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020, 3:10:49 pm (UTC)'!
 current
 	^ CurrentFinder! !
 
-!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020 12:11:06'!
+!FinderMorph class methodsFor: 'current finder' stamp: 'MM 7/Sep/2020, 3:11:06 pm (UTC)'!
 current: anInstance
 	CurrentFinder _ anInstance! !
 
-!FinderMorph class methodsFor: 'current finder' stamp: 'JEC 10/Jan/2026 23:03:46'!
+!FinderMorph class methodsFor: 'current finder' stamp: 'JEC 11/Jan/2026, 2:03:46 am (UTC)'!
 deleteCurrent
 	CurrentFinder := nil! !
 
-!FinderMorph class methodsFor: 'instance creation' stamp: 'MM 7/Sep/2020 11:42:47'!
+!FinderMorph class methodsFor: 'instance creation' stamp: 'MM 7/Sep/2020, 2:42:47 pm (UTC)'!
 open
 	
 	^ self newColumn 
@@ -552,33 +585,33 @@ open
 		buildMorphicWindow;
 		openInWorld! !
 
-!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 30/Jun/2020 09:31:20'!
+!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 30/Jun/2020, 12:31:20 pm (UTC)'!
 notifyQueryChanged
 
 	self stopStepping.
 	^ changeHandler value: self query! !
 
-!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'NPM 9/May/2020 13:23:26'!
+!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'NPM 9/May/2020, 4:23:26 pm (UTC)'!
 processKeyStroke
 	
 	dateAndTimeOfLastKeyStroke  := DateAndTime now.
 	
 	self startStepping! !
 
-!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 3/Nov/2021 20:29:26'!
+!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 3/Nov/2021, 11:29:26 pm (UTC)'!
 registerKeyStrokeHandler
 
 	^ searchBox innerTextMorph 
 		setProperty: #'keyStroke:'
 		toValue: [ :event | self processKeyStroke ]! !
 
-!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 3/Nov/2021 21:28:44'!
+!FinderSearchBar methodsFor: 'key stroke handling' stamp: 'HAW 4/Nov/2021, 12:28:44 am (UTC)'!
 unregisterKeyStrokeHandler
 
 	searchBox innerTextMorph
 		removeProperty: #'keyStroke:'! !
 
-!FinderSearchBar methodsFor: 'initialization' stamp: 'HAW 18/Feb/2025 17:06:18'!
+!FinderSearchBar methodsFor: 'initialization' stamp: 'HAW 18/Feb/2025, 8:06:18 pm (UTC)'!
 initializeHandlingChangesWith: aChangeHandler handlingKeysPressedWith: aKeyPressedHandler notifyingChangesAfter: anAmountOfTime  
 	
 	changeHandler := aChangeHandler.
@@ -589,7 +622,7 @@ initializeHandlingChangesWith: aChangeHandler handlingKeysPressedWith: aKeyPress
 	self initializeSearchBoxEditor.
 	self registerKeyStrokeHandler.! !
 
-!FinderSearchBar methodsFor: 'initialization' stamp: 'HAW 18/Feb/2025 17:05:13'!
+!FinderSearchBar methodsFor: 'initialization' stamp: 'HAW 18/Feb/2025, 8:05:13 pm (UTC)'!
 initializeSearchBox
 
 	searchBox := (FinderSearchTextModelMorph withText: '').
@@ -598,7 +631,7 @@ initializeSearchBox
 	
 	self addMorphUseAll: searchBox.! !
 
-!FinderSearchBar methodsFor: 'initialization' stamp: 'NPM 3/May/2020 21:02:26'!
+!FinderSearchBar methodsFor: 'initialization' stamp: 'NPM 4/May/2020, 12:02:26 am (UTC)'!
 initializeSearchBoxEditor
 	
 	^ SearchBoxEditor
@@ -606,29 +639,29 @@ initializeSearchBoxEditor
 		handlingKeyStrokesWith: keyPressedHandler
 		! !
 
-!FinderSearchBar methodsFor: 'accessing' stamp: 'NPM 3/May/2020 20:22:39'!
+!FinderSearchBar methodsFor: 'accessing' stamp: 'NPM 3/May/2020, 11:22:39 pm (UTC)'!
 query
 	
 	^ searchBox text asString! !
 
-!FinderSearchBar methodsFor: 'accessing' stamp: 'HAW 3/Nov/2021 20:29:36'!
+!FinderSearchBar methodsFor: 'accessing' stamp: 'HAW 3/Nov/2021, 11:29:36 pm (UTC)'!
 searchField
 	
 	^ searchBox innerTextMorph ! !
 
-!FinderSearchBar methodsFor: 'accessing' stamp: 'NPM 9/May/2020 13:11:44'!
+!FinderSearchBar methodsFor: 'accessing' stamp: 'NPM 9/May/2020, 4:11:44 pm (UTC)'!
 timeSinceLastKeyStroke
 
 	^ DateAndTime now - dateAndTimeOfLastKeyStroke! !
 
-!FinderSearchBar methodsFor: 'submorphs-add/remove' stamp: 'JEC 10/Jan/2026 23:10:49'!
+!FinderSearchBar methodsFor: 'submorphs-add/remove' stamp: 'JEC 11/Jan/2026, 2:10:49 am (UTC)'!
 clearDependencyAndEvents
 
 	self unregisterKeyStrokeHandler.
 	
 	^ super clearDependencyAndEvents.! !
 
-!FinderSearchBar methodsFor: 'stepping' stamp: 'HAW 30/Jun/2020 09:31:12'!
+!FinderSearchBar methodsFor: 'stepping' stamp: 'HAW 30/Jun/2020, 12:31:12 pm (UTC)'!
 stepAt: millisecondSinceLast
 
 	self shouldNotifyQueryChanged
@@ -639,17 +672,17 @@ stepAt: millisecondSinceLast
 	
 	! !
 
-!FinderSearchBar methodsFor: 'testing' stamp: 'NPM 9/May/2020 13:17:30'!
+!FinderSearchBar methodsFor: 'testing' stamp: 'NPM 9/May/2020, 4:17:30 pm (UTC)'!
 shouldNotifyQueryChanged
 
 	^ self timeSinceLastKeyStroke >= timeToWaitBeforeNotifyingChanges! !
 
-!FinderSearchBar methodsFor: 'testing' stamp: 'NPM 9/May/2020 13:21:53'!
+!FinderSearchBar methodsFor: 'testing' stamp: 'NPM 9/May/2020, 4:21:53 pm (UTC)'!
 stepTime
 
 	^ timeToWaitBeforeNotifyingChanges totalMilliseconds! !
 
-!FinderSearchBar class methodsFor: 'instance creation' stamp: 'HAW 25/Jul/2025 17:50:02'!
+!FinderSearchBar class methodsFor: 'instance creation' stamp: 'HAW 25/Jul/2025, 8:50:02 pm (UTC)'!
 onChanged: aChangeHandler onKeyPressed: aKeyPressedHandler notifyingChangesAfter: anAmountOfTime  
 	
 	^ self newRow
@@ -657,118 +690,122 @@ onChanged: aChangeHandler onKeyPressed: aKeyPressedHandler notifyingChangesAfter
 		handlingKeysPressedWith: aKeyPressedHandler
 		notifyingChangesAfter: anAmountOfTime! !
 
-!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020 14:23:26'!
+!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020, 5:23:26 pm (UTC)'!
 gainFocusFrom: aHand
 ! !
 
-!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020 14:20:15'!
+!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020, 5:20:15 pm (UTC)'!
 mouseEnter: event! !
 
-!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020 14:21:34'!
+!FinderResultsListMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020, 5:21:34 pm (UTC)'!
 mouseLeave: evt! !
 
-!FinderResultsListMorph methodsFor: 'event handling testing' stamp: 'MM 25/Sep/2020 14:15:57'!
+!FinderResultsListMorph methodsFor: 'event handling testing' stamp: 'MM 25/Sep/2020, 5:15:57 pm (UTC)'!
 handlesKeyboard
 	^ false! !
 
-!FinderSearchTextModelMorph methodsFor: 'initialization' stamp: 'MM 25/Sep/2020 14:43:52'!
+!FinderSearchTextModelMorph methodsFor: 'initialization' stamp: 'MM 25/Sep/2020, 5:43:52 pm (UTC)'!
 innerMorphClass
 	^ FinderSearchInnerTextMorph! !
 
-!FinderSearchTextModelMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020 14:48:53'!
+!FinderSearchTextModelMorph methodsFor: 'events' stamp: 'MM 25/Sep/2020, 5:48:53 pm (UTC)'!
 mouseLeave: evt! !
 
-!FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'HAW 25/Feb/2025 19:24:43'!
-keyboardFocusChange: aBoolean
-	"Notify change due to green border for keyboard focus"
-	aBoolean ifFalse: [
-		(self firstOwnerSuchThat: [ :m | m class ==  FinderMorph]) delete.].! !
+!FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'HAW 19/Sep/2026, 11:38:04 pm (UTC)'!
+finder
 
-!Catalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020 02:38:49'!
+	^self firstOwnerSuchThat: [ :anOwner | anOwner class = FinderMorph ]! !
+
+!FinderSearchInnerTextMorph methodsFor: 'event handling' stamp: 'HAW 19/Sep/2026, 11:37:38 pm (UTC)'!
+keyboardFocusChange: aBoolean
+
+	aBoolean ifFalse: [ self finder searchFieldLostKeyboardFocus ]! !
+
+!Catalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020, 5:38:49 am (UTC)'!
 name
 
 	self subclassResponsibility! !
 
-!Catalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:29:31'!
+!Catalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:29:31 am (UTC)'!
 processEmptySearchQuery
 	
 	^ OrderedCollection new! !
 
-!Catalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:48'!
+!Catalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:48 am (UTC)'!
 processNonEmptySearchQuery: aQuery
 
 	self subclassResponsibility! !
 
-!Catalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:48'!
+!Catalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:48 am (UTC)'!
 search: aQuery
 
 	^ aQuery
 		ifEmpty: [ self processEmptySearchQuery ]
 		ifNotEmpty: [ self processNonEmptySearchQuery: aQuery ]! !
 
-!Catalog methodsFor: 'testing' stamp: 'NPM 29/Mar/2020 01:40:37'!
+!Catalog methodsFor: 'testing' stamp: 'NPM 29/Mar/2020, 4:40:37 am (UTC)'!
 isNamed: aName 
 	
 	^ self name = aName! !
 
-!Catalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020 02:25:34'!
+!Catalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020, 5:25:34 am (UTC)'!
 browse: aResult
 
 	self subclassResponsibility! !
 
-!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020 19:31:34'!
+!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020, 10:31:34 pm (UTC)'!
 classNames
 	
 	^ ClassNamesCatalog create! !
 
-!Catalog class methodsFor: 'known instances' stamp: 'NPM 4/Apr/2020 02:01:12'!
+!Catalog class methodsFor: 'known instances' stamp: 'NPM 4/Apr/2020, 5:01:12 am (UTC)'!
 composite: children 
 	
 	^ CompositeCatalog withAll: children ! !
 
-!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020 19:31:37'!
+!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020, 10:31:37 pm (UTC)'!
 implementedSelectors
 	
 	^ ImplementedSelectorsCatalog create! !
 
-!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020 19:31:40'!
+!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020, 10:31:40 pm (UTC)'!
 implementors
 	
 	^ ImplementorsCatalog create! !
 
-!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020 19:31:45'!
+!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020, 10:31:45 pm (UTC)'!
 senders
 	
 	^ SendersCatalog create! !
 
-!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020 19:31:51'!
+!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020, 10:31:51 pm (UTC)'!
 systemCategories
 	
 	^ PackagesCatalog create! !
 
-!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020 19:31:53'!
+!Catalog class methodsFor: 'known instances' stamp: 'NPM 22/Apr/2020, 10:31:53 pm (UTC)'!
 tools
 	
 	^ ToolsCatalog create! !
 
-!Catalog class methodsFor: 'instance creation' stamp: 'NPM 4/Apr/2020 02:01:53'!
+!Catalog class methodsFor: 'instance creation' stamp: 'NPM 4/Apr/2020, 5:01:53 am (UTC)'!
 create
 	
 	^ self new! !
 
-!ClassNamesCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020 02:39:01'!
+!ClassNamesCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020, 5:39:01 am (UTC)'!
 name
 	
 	^ 'Classes'! !
 
-!ClassNamesCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:48'!
+!ClassNamesCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:48 am (UTC)'!
 processNonEmptySearchQuery: aQuery
 
 	^ SubstringMatcher
 		valueFiltering: Smalltalk classNames
 		with: aQuery! !
 
-!ClassNamesCatalog methodsFor: 'browsing' stamp: 'Ez3 20/Dec/2024 03:03:24'!
+!ClassNamesCatalog methodsFor: 'browsing' stamp: 'Ez3 20/Dec/2024, 6:03:24 am (UTC)'!
 browse: aClassName 
 	
 	| class |
@@ -777,23 +814,23 @@ browse: aClassName
 	BrowserWindow
 		fullOnClass: class selector: nil! !
 
-!CompositeCatalog methodsFor: 'accessing' stamp: 'NPM 1/Apr/2020 00:31:00'!
+!CompositeCatalog methodsFor: 'accessing' stamp: 'NPM 1/Apr/2020, 3:31:00 am (UTC)'!
 name
 	
 	^ 'All'! !
 
-!CompositeCatalog methodsFor: 'initialization' stamp: 'NPM 1/Apr/2020 00:30:46'!
+!CompositeCatalog methodsFor: 'initialization' stamp: 'NPM 1/Apr/2020, 3:30:46 am (UTC)'!
 initializeWithAll: children
 
 	catalogs := children! !
 
-!CompositeCatalog methodsFor: 'browsing' stamp: 'NPM 20/Apr/2020 16:31:26'!
+!CompositeCatalog methodsFor: 'browsing' stamp: 'NPM 20/Apr/2020, 7:31:26 pm (UTC)'!
 browse: aResult
 
 	aResult browse
 	! !
 
-!CompositeCatalog methodsFor: 'searching' stamp: 'NPM 20/Apr/2020 16:47:20'!
+!CompositeCatalog methodsFor: 'searching' stamp: 'NPM 20/Apr/2020, 7:47:20 pm (UTC)'!
 processNonEmptySearchQuery: aQuery
 	
 	^ catalogs
@@ -803,42 +840,42 @@ processNonEmptySearchQuery: aQuery
 				addAll: (self search: aQuery using: catalog);
 				yourself ]! !
 
-!CompositeCatalog methodsFor: 'searching' stamp: 'NPM 20/Apr/2020 16:53:30'!
+!CompositeCatalog methodsFor: 'searching' stamp: 'NPM 20/Apr/2020, 7:53:30 pm (UTC)'!
 search: aQuery using: aCatalog
 	
 	^ (aCatalog search: aQuery)
 		collect: [ :result | CompositeCatalogResult with: aCatalog from: result ]! !
 
-!CompositeCatalog class methodsFor: 'instance creation' stamp: 'NPM 1/Apr/2020 00:30:33'!
+!CompositeCatalog class methodsFor: 'instance creation' stamp: 'NPM 1/Apr/2020, 3:30:33 am (UTC)'!
 withAll: children 
 	
 	^ self
 		new
 		initializeWithAll: children! !
 
-!ImplementedSelectorsCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020 02:39:13'!
+!ImplementedSelectorsCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020, 5:39:13 am (UTC)'!
 name
 	
 	^ 'Selectors'! !
 
-!ImplementedSelectorsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:48'!
+!ImplementedSelectorsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:48 am (UTC)'!
 processNonEmptySearchQuery: aQuery
 
 	^ SubstringMatcher
 		valueFiltering: Smalltalk allImplementedMessages
 		with: aQuery! !
 
-!ImplementedSelectorsCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020 02:25:34'!
+!ImplementedSelectorsCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020, 5:25:34 am (UTC)'!
 browse: aSelector
 
 	Smalltalk browseAllImplementorsOf: aSelector! !
 
-!ImplementorsCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020 02:47:38'!
+!ImplementorsCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020, 5:47:38 am (UTC)'!
 name
 	
 	^ 'Implementors'! !
 
-!ImplementorsCatalog methodsFor: 'searching' stamp: 'NPM 24/May/2020 13:40:14'!
+!ImplementorsCatalog methodsFor: 'searching' stamp: 'NPM 24/May/2020, 4:40:14 pm (UTC)'!
 processNonEmptySearchQuery: aQuery
 
 	| implementors |
@@ -851,33 +888,33 @@ processNonEmptySearchQuery: aQuery
 		
 	^ resultsSorter value: implementors! !
 
-!ImplementorsCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020 02:25:34'!
+!ImplementorsCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020, 5:25:34 am (UTC)'!
 browse: aMethodReference 
 
 	HierarchyBrowserWindow
 		onClass: aMethodReference methodClass
 		selector: aMethodReference selector! !
 
-!ImplementorsCatalog methodsFor: 'initialization' stamp: 'NPM 24/May/2020 13:49:04'!
+!ImplementorsCatalog methodsFor: 'initialization' stamp: 'NPM 24/May/2020, 4:49:04 pm (UTC)'!
 initialize
 
 	super initialize.
 	
 	resultsSorter := ResultsSorter alphabetically, ResultsSorter bySelectorSize ! !
 
-!PackagesCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020 03:12:11'!
+!PackagesCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020, 6:12:11 am (UTC)'!
 name
 	
 	^ 'System categories'! !
 
-!PackagesCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:48'!
+!PackagesCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:48 am (UTC)'!
 processNonEmptySearchQuery: aQuery 
 	
 	^ SubstringMatcher
 		valueFiltering: SystemOrganization categories
 		with: aQuery! !
 
-!PackagesCatalog methodsFor: 'browsing' stamp: 'HAW 27/Apr/2022 12:21:12'!
+!PackagesCatalog methodsFor: 'browsing' stamp: 'HAW 27/Apr/2022, 3:21:12 pm (UTC)'!
 browse: aSystemCategoryName 
 	
 	| newBrowser |
@@ -887,29 +924,29 @@ browse: aSystemCategoryName
 
 	BrowserWindow open: newBrowser label: newBrowser defaultBrowserTitle! !
 
-!SendersCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020 02:54:18'!
+!SendersCatalog methodsFor: 'accessing' stamp: 'NPM 28/Mar/2020, 5:54:18 am (UTC)'!
 name
 	
 	^ 'Senders'! !
 
-!SendersCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:48'!
+!SendersCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:48 am (UTC)'!
 processNonEmptySearchQuery: aQuery 
 	
 	^ (Smalltalk allCallsOn: aQuery asString asSymbol) asArray sort! !
 
-!SendersCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020 02:25:34'!
+!SendersCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020, 5:25:34 am (UTC)'!
 browse: aMethodReference 
 	
 	HierarchyBrowserWindow
 		onClass: aMethodReference methodClass
 		selector: aMethodReference selector! !
 
-!ToolsCatalog methodsFor: 'accessing' stamp: 'NPM 31/Mar/2020 19:09:53'!
+!ToolsCatalog methodsFor: 'accessing' stamp: 'NPM 31/Mar/2020, 10:09:53 pm (UTC)'!
 name
 	
 	^ 'Tools'! !
 
-!ToolsCatalog methodsFor: 'initialization' stamp: 'NPM 4/Apr/2020 02:04:59'!
+!ToolsCatalog methodsFor: 'initialization' stamp: 'NPM 4/Apr/2020, 5:04:59 am (UTC)'!
 initializeTools
 
 	self
@@ -917,7 +954,7 @@ initializeTools
 		sort: self blockForSortingItemsByLabel;
 		do: [ :menuItem | self addToolFrom: menuItem ]! !
 
-!ToolsCatalog methodsFor: 'initialization' stamp: 'NPM 4/Apr/2020 02:05:05'!
+!ToolsCatalog methodsFor: 'initialization' stamp: 'NPM 4/Apr/2020, 5:05:05 am (UTC)'!
 initializeWith: anImplementorsCatalog
 
 	super initialize.
@@ -927,46 +964,46 @@ initializeWith: anImplementorsCatalog
 	
 	self initializeTools.! !
 
-!ToolsCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020 02:25:34'!
+!ToolsCatalog methodsFor: 'browsing' stamp: 'NPM 2/Apr/2020, 5:25:34 am (UTC)'!
 browse: aToolName
 
 	(tools at: aToolName) value! !
 
-!ToolsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:08'!
+!ToolsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:08 am (UTC)'!
 processEmptySearchQuery
 	
 	^ self toolNames! !
 
-!ToolsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:30:48'!
+!ToolsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:30:48 am (UTC)'!
 processNonEmptySearchQuery: aQuery
 
 	^ SubstringMatcher
 		valueFiltering: self toolNames
 		with: aQuery! !
 
-!ToolsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:29:52'!
+!ToolsCatalog methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:29:52 am (UTC)'!
 toolNames
 
 	^ tools keysSortedSafely! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 28/Jul/2022 19:03:52'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 28/Jul/2022, 10:03:52 pm (UTC)'!
 addToolFrom: aMenuItem 
 	
 	tools
 		at: (self labelFor: aMenuItem)
 		put: [ (aMenuItem at: #object) perform: (aMenuItem at: #selector) ]! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'NPM 4/Apr/2020 01:47:55'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'NPM 4/Apr/2020, 4:47:55 am (UTC)'!
 blockForSortingItemsByLabel
 	
 	^ [ :aMenuItem :anotherMenuItem | (self labelFor: aMenuItem) <= (self labelFor: anotherMenuItem) ]! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 28/Jul/2022 19:02:30'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 28/Jul/2022, 10:02:30 pm (UTC)'!
 labelFor: aMenuItem
 
 	^ aMenuItem at: #label! !
 
-!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 29/Apr/2025 15:26:45'!
+!ToolsCatalog methodsFor: 'tools' stamp: 'HAW 29/Apr/2025, 6:26:45 pm (UTC)'!
 menuItemsForOpenGroup
 
 	| openMenuOptions worldMenuOptions |
@@ -984,35 +1021,35 @@ menuItemsForOpenGroup
 		
 	^openMenuOptions ! !
 
-!ToolsCatalog class methodsFor: 'instance creation' stamp: 'NPM 4/Apr/2020 02:04:14'!
+!ToolsCatalog class methodsFor: 'instance creation' stamp: 'NPM 4/Apr/2020, 5:04:14 am (UTC)'!
 create
 
 	^ self
 		new
 		initializeWith: ImplementorsCatalog create! !
 
-!CompositeCatalogResult methodsFor: 'browsing' stamp: 'NPM 20/Apr/2020 16:31:40'!
+!CompositeCatalogResult methodsFor: 'browsing' stamp: 'NPM 20/Apr/2020, 7:31:40 pm (UTC)'!
 browse
 	
 	catalog browse: result! !
 
-!CompositeCatalogResult methodsFor: 'initialization' stamp: 'NPM 20/Apr/2020 16:54:28'!
+!CompositeCatalogResult methodsFor: 'initialization' stamp: 'NPM 20/Apr/2020, 7:54:28 pm (UTC)'!
 initializeWith: aResult from: aCatalog
 
 	catalog := aCatalog.
 	result := aResult.! !
 
-!CompositeCatalogResult methodsFor: 'printing' stamp: 'NPM 20/Apr/2020 16:24:02'!
+!CompositeCatalogResult methodsFor: 'printing' stamp: 'NPM 20/Apr/2020, 7:24:02 pm (UTC)'!
 catalogNamePrefix
 	
 	^ '[', catalog name, ']'! !
 
-!CompositeCatalogResult methodsFor: 'printing' stamp: 'NPM 20/Apr/2020 16:29:57'!
+!CompositeCatalogResult methodsFor: 'printing' stamp: 'NPM 20/Apr/2020, 7:29:57 pm (UTC)'!
 displayStringOrText
 
 	^ self catalogNamePrefix, ' ', result displayStringOrText! !
 
-!CompositeCatalogResult class methodsFor: 'instance creation' stamp: 'NPM 20/Apr/2020 16:54:28'!
+!CompositeCatalogResult class methodsFor: 'instance creation' stamp: 'NPM 20/Apr/2020, 7:54:28 pm (UTC)'!
 with: aResult from: aCatalog
 
 	^ self
@@ -1020,26 +1057,26 @@ with: aResult from: aCatalog
 		initializeWith: aCatalog
 		from: aResult! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020 01:20:03'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020, 4:20:03 am (UTC)'!
 catalogAfterSelectedCatalog
 
 	^ (catalogs last = selectedCatalog)
 		ifTrue: [ catalogs first ]
 		ifFalse: [ catalogs at: (catalogs indexOf: selectedCatalog) + 1 ]! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020 01:19:40'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020, 4:19:40 am (UTC)'!
 catalogBeforeSelectedCatalog
 
 	^ (catalogs first = selectedCatalog)
 		ifTrue: [ catalogs last ]
 		ifFalse: [ catalogs at: (catalogs indexOf: selectedCatalog) - 1 ]! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020 00:29:28'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020, 3:29:28 am (UTC)'!
 catalogsDo: aBlock
 	
 	catalogs do: aBlock! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 29/Mar/2020 13:05:43'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 29/Mar/2020, 4:05:43 pm (UTC)'!
 changeSelectedCatalog: aCatalog
 
 	self selectCatalog: aCatalog.
@@ -1047,14 +1084,14 @@ changeSelectedCatalog: aCatalog
 		
 	! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 29/Mar/2020 13:03:03'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 29/Mar/2020, 4:03:03 pm (UTC)'!
 isSelectedCatalog: aCatalog
 
 	^ selectedCatalog = aCatalog
 		
 	! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020 01:04:44'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020, 4:04:44 am (UTC)'!
 selectCatalog: aCatalog
 
 	selectedCatalog := aCatalog.
@@ -1062,22 +1099,22 @@ selectCatalog: aCatalog
 	self changed: selectedCatalogChangeEvent.
 	! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020 01:20:35'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020, 4:20:35 am (UTC)'!
 selectNextCatalog
 	
 	self changeSelectedCatalog: self catalogAfterSelectedCatalog! !
 
-!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020 01:19:50'!
+!Finder methodsFor: 'catalogs' stamp: 'NPM 2/Apr/2020, 4:19:50 am (UTC)'!
 selectPreviousCatalog
 	
 	self changeSelectedCatalog: self catalogBeforeSelectedCatalog! !
 
-!Finder methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:33:58'!
+!Finder methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:33:58 am (UTC)'!
 refreshSearchResults
 
 	self searchForResults! !
 
-!Finder methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:33:25'!
+!Finder methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:33:25 am (UTC)'!
 search: aQuery
 
 	currentQuery = aQuery
@@ -1087,7 +1124,7 @@ search: aQuery
 	self searchForResults.
 	! !
 
-!Finder methodsFor: 'searching' stamp: 'NPM 2/Apr/2020 02:33:29'!
+!Finder methodsFor: 'searching' stamp: 'NPM 2/Apr/2020, 5:33:29 am (UTC)'!
 searchForResults
 
 	results := selectedCatalog search: currentQuery.
@@ -1098,27 +1135,27 @@ searchForResults
 		
 	self changed: #results.! !
 
-!Finder methodsFor: 'initialization' stamp: 'NPM 29/Mar/2020 01:59:55'!
+!Finder methodsFor: 'initialization' stamp: 'NPM 29/Mar/2020, 4:59:55 am (UTC)'!
 initializeCatalogs: aCollectionOfCatalogs
 
 	catalogs := aCollectionOfCatalogs.
 	selectedCatalog := catalogs first.! !
 
-!Finder methodsFor: 'initialization' stamp: 'NPM 20/Apr/2020 17:03:35'!
+!Finder methodsFor: 'initialization' stamp: 'NPM 20/Apr/2020, 8:03:35 pm (UTC)'!
 initializeEventNames
 
 	selectedCatalogChangeEvent := #selectedCatalog.
 	browseSelectedResultEvent := #browseSelectedResult.
 	closeEvent := #close.! !
 
-!Finder methodsFor: 'initialization' stamp: 'NPM 24/May/2020 13:27:54'!
+!Finder methodsFor: 'initialization' stamp: 'NPM 24/May/2020, 4:27:54 pm (UTC)'!
 initializeResults
 	
 	currentQuery := ''.
 	results := OrderedCollection new.
 	selectedResultIndex := 0.! !
 
-!Finder methodsFor: 'initialization' stamp: 'NPM 24/May/2020 13:26:37'!
+!Finder methodsFor: 'initialization' stamp: 'NPM 24/May/2020, 4:26:37 pm (UTC)'!
 initializeWithAll: aCollectionOfCatalogs
 
 	super initialize.
@@ -1127,13 +1164,13 @@ initializeWithAll: aCollectionOfCatalogs
 	self initializeCatalogs: aCollectionOfCatalogs.	
 	self initializeEventNames.! !
 
-!Finder methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020 01:05:06'!
+!Finder methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020, 4:05:06 am (UTC)'!
 isSelectedCatalogChange: anEvent ifTrue: aBlock
 
 	anEvent = selectedCatalogChangeEvent
 		ifTrue: aBlock! !
 
-!Finder methodsFor: 'results' stamp: 'HAW 30/Jun/2020 09:32:42'!
+!Finder methodsFor: 'results' stamp: 'HAW 30/Jun/2020, 12:32:42 pm (UTC)'!
 browseSelectedResult
 	
 	| selected |
@@ -1143,17 +1180,17 @@ browseSelectedResult
 	
 	self changed: browseSelectedResultEvent! !
 
-!Finder methodsFor: 'results' stamp: 'NPM 20/Apr/2020 17:03:53'!
+!Finder methodsFor: 'results' stamp: 'NPM 20/Apr/2020, 8:03:53 pm (UTC)'!
 close
 	
 	self changed: closeEvent! !
 
-!Finder methodsFor: 'results' stamp: 'NPM 28/Mar/2020 01:43:57'!
+!Finder methodsFor: 'results' stamp: 'NPM 28/Mar/2020, 4:43:57 am (UTC)'!
 results
 	
 	^ results! !
 
-!Finder methodsFor: 'results' stamp: 'NPM 2/Apr/2020 01:09:49'!
+!Finder methodsFor: 'results' stamp: 'NPM 2/Apr/2020, 4:09:49 am (UTC)'!
 selectNextResult
 	
 	results ifEmpty: [ ^ self ].
@@ -1162,7 +1199,7 @@ selectNextResult
 		ifTrue: [ self selectedResultIndex: 1 ]
 		ifFalse: [ self selectedResultIndex: selectedResultIndex + 1].! !
 
-!Finder methodsFor: 'results' stamp: 'NPM 26/Apr/2020 22:20:18'!
+!Finder methodsFor: 'results' stamp: 'NPM 27/Apr/2020, 1:20:18 am (UTC)'!
 selectPreviousResult
 
 	results ifEmpty: [ ^ self ].
@@ -1172,18 +1209,18 @@ selectPreviousResult
 		ifFalse: [ self selectedResultIndex: selectedResultIndex - 1].
 	! !
 
-!Finder methodsFor: 'results' stamp: 'NPM 28/Mar/2020 01:44:05'!
+!Finder methodsFor: 'results' stamp: 'NPM 28/Mar/2020, 4:44:05 am (UTC)'!
 selectedResultIndex
 	
 	^ selectedResultIndex! !
 
-!Finder methodsFor: 'results' stamp: 'NPM 2/Apr/2020 01:07:20'!
+!Finder methodsFor: 'results' stamp: 'NPM 2/Apr/2020, 4:07:20 am (UTC)'!
 selectedResultIndex: anIndex 
 	
 	selectedResultIndex _ anIndex.
 	self changed: #selectedResultIndex.! !
 
-!Finder class methodsFor: 'instance creation' stamp: 'MM 8/Sep/2020 12:10:07'!
+!Finder class methodsFor: 'instance creation' stamp: 'MM 8/Sep/2020, 3:10:07 pm (UTC)'!
 availableCatalogs
 
 	^ OrderedCollection new
@@ -1195,7 +1232,7 @@ availableCatalogs
 		add: Catalog tools;
 		yourself! !
 
-!Finder class methodsFor: 'instance creation' stamp: 'NPM 22/Apr/2020 19:35:35'!
+!Finder class methodsFor: 'instance creation' stamp: 'NPM 22/Apr/2020, 10:35:35 pm (UTC)'!
 defaultCatalogs
 	
 	| catalogs |
@@ -1205,97 +1242,97 @@ defaultCatalogs
 	
 	^ catalogs! !
 
-!Finder class methodsFor: 'instance creation' stamp: 'NPM 22/Apr/2020 19:33:33'!
+!Finder class methodsFor: 'instance creation' stamp: 'NPM 22/Apr/2020, 10:33:33 pm (UTC)'!
 withDefaultCatalogs
 	
 	^ self
 		new
 		initializeWithAll: self defaultCatalogs! !
 
-!ResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020 14:02:25'!
+!ResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020, 5:02:25 pm (UTC)'!
 value: results
 	
 	self subclassResponsibility! !
 
-!ResultsSorter methodsFor: 'combining' stamp: 'NPM 24/May/2020 14:11:31'!
+!ResultsSorter methodsFor: 'combining' stamp: 'NPM 24/May/2020, 5:11:31 pm (UTC)'!
 , other
 	
 	^ SequentialResultsSorter with: self with: other! !
 
-!ResultsSorter class methodsFor: 'known instances' stamp: 'NPM 24/May/2020 13:40:30'!
+!ResultsSorter class methodsFor: 'known instances' stamp: 'NPM 24/May/2020, 4:40:30 pm (UTC)'!
 alphabetically
 	
 	^ AlphabeticalResultsSorter new! !
 
-!ResultsSorter class methodsFor: 'known instances' stamp: 'NPM 24/May/2020 14:09:38'!
+!ResultsSorter class methodsFor: 'known instances' stamp: 'NPM 24/May/2020, 5:09:38 pm (UTC)'!
 bySelectorSize
 	
 	^ SelectorSizeResultsSorter new! !
 
-!ResultsSorter class methodsFor: 'known instances' stamp: 'NPM 24/May/2020 14:09:28'!
+!ResultsSorter class methodsFor: 'known instances' stamp: 'NPM 24/May/2020, 5:09:28 pm (UTC)'!
 bySize
 	
 	^ SizeResultsSorter new! !
 
-!AlphabeticalResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020 13:46:23'!
+!AlphabeticalResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020, 4:46:23 pm (UTC)'!
 value: results
 
 	^ results sort: [ :result :otherResult | result <= otherResult ]! !
 
-!SelectorSizeResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020 14:09:59'!
+!SelectorSizeResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020, 5:09:59 pm (UTC)'!
 value: results
 
 	^ results sort: [ :result :otherResult | result selector size <= otherResult selector size ]! !
 
-!SequentialResultsSorter methodsFor: 'initialization' stamp: 'NPM 24/May/2020 14:03:38'!
+!SequentialResultsSorter methodsFor: 'initialization' stamp: 'NPM 24/May/2020, 5:03:38 pm (UTC)'!
 initializeWithAll: aCollectionOfResultsSorters 
 	
 	resultsSorters := aCollectionOfResultsSorters.! !
 
-!SequentialResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020 14:03:21'!
+!SequentialResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020, 5:03:21 pm (UTC)'!
 value: results
 	
 	^ resultsSorters
 		inject: results
 		into: [ :partiallySortedResults :resultsSorter | resultsSorter value: partiallySortedResults ]! !
 
-!SequentialResultsSorter class methodsFor: 'instance creation' stamp: 'NPM 24/May/2020 13:43:10'!
+!SequentialResultsSorter class methodsFor: 'instance creation' stamp: 'NPM 24/May/2020, 4:43:10 pm (UTC)'!
 with: firstResultsSorter with: secondResultsSorter 
 	
 	^ self
 		new
 		initializeWithAll: (Array with: firstResultsSorter with: secondResultsSorter)! !
 
-!SizeResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020 14:08:43'!
+!SizeResultsSorter methodsFor: 'evaluating' stamp: 'NPM 24/May/2020, 5:08:43 pm (UTC)'!
 value: results
 
 	^ results sort: [ :result :otherResult | result size <= otherResult size ]! !
 
-!SubstringMatcher methodsFor: 'filtering' stamp: 'NPM 2/Apr/2020 01:25:02'!
+!SubstringMatcher methodsFor: 'filtering' stamp: 'NPM 2/Apr/2020, 4:25:02 am (UTC)'!
 filterCollection
 
 	^ collection select: [ :item | item includesSubstring: substring caseSensitive: false ]! !
 
-!SubstringMatcher methodsFor: 'evaluating' stamp: 'NPM 24/May/2020 13:59:04'!
+!SubstringMatcher methodsFor: 'evaluating' stamp: 'NPM 24/May/2020, 4:59:04 pm (UTC)'!
 value
 
 	^ resultsSorter value: (self filterCollection asOrderedCollection)! !
 
-!SubstringMatcher methodsFor: 'initialization' stamp: 'NPM 24/May/2020 13:57:53'!
+!SubstringMatcher methodsFor: 'initialization' stamp: 'NPM 24/May/2020, 4:57:53 pm (UTC)'!
 initializeFiltering: aCollection with: aSubstring 
 	
 	collection := aCollection.
 	substring := aSubstring.
 	resultsSorter := ResultsSorter alphabetically, ResultsSorter bySize.! !
 
-!SubstringMatcher class methodsFor: 'evaluating' stamp: 'NPM 2/Apr/2020 01:25:22'!
+!SubstringMatcher class methodsFor: 'evaluating' stamp: 'NPM 2/Apr/2020, 4:25:22 am (UTC)'!
 valueFiltering: aCollection with: aSubstring 
 	
 	^ (self forFiltering: aCollection with: aSubstring)
 		value
 		! !
 
-!SubstringMatcher class methodsFor: 'instance creation' stamp: 'NPM 2/Apr/2020 01:25:18'!
+!SubstringMatcher class methodsFor: 'instance creation' stamp: 'NPM 2/Apr/2020, 4:25:18 am (UTC)'!
 forFiltering: aCollection with: aSubstring 
 	
 	^ self
@@ -1303,38 +1340,38 @@ forFiltering: aCollection with: aSubstring
 		initializeFiltering: aCollection
 		with: aSubstring ! !
 
-!CatalogButton methodsFor: 'evaluating' stamp: 'NPM 29/Mar/2020 13:13:43'!
+!CatalogButton methodsFor: 'evaluating' stamp: 'NPM 29/Mar/2020, 4:13:43 pm (UTC)'!
 value
 	
 	model changeSelectedCatalog: catalog! !
 
-!CatalogButton methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020 00:45:07'!
+!CatalogButton methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020, 3:45:07 am (UTC)'!
 handleSelectedCatalogChange: anEvent
 
 	^ model
 		isSelectedCatalogChange: anEvent
 		ifTrue: [ self changed: #isSelected ]! !
 
-!CatalogButton methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020 00:45:01'!
+!CatalogButton methodsFor: 'events-old protocol' stamp: 'NPM 2/Apr/2020, 3:45:01 am (UTC)'!
 update: anEvent
 
 	super update: anEvent.
 	
 	self handleSelectedCatalogChange: anEvent! !
 
-!CatalogButton methodsFor: 'initialization' stamp: 'NPM 2/Apr/2020 00:48:35'!
+!CatalogButton methodsFor: 'initialization' stamp: 'NPM 2/Apr/2020, 3:48:35 am (UTC)'!
 initializeFor: aCatalog model: aFinder 
 	
 	catalog := aCatalog .
 	model := aFinder.
 	model addDependent: self.! !
 
-!CatalogButton methodsFor: 'testing' stamp: 'NPM 29/Mar/2020 13:02:57'!
+!CatalogButton methodsFor: 'testing' stamp: 'NPM 29/Mar/2020, 4:02:57 pm (UTC)'!
 isSelected
 
 	^ model isSelectedCatalog: catalog! !
 
-!CatalogButton class methodsFor: 'instance creation' stamp: 'NPM 2/Apr/2020 00:48:35'!
+!CatalogButton class methodsFor: 'instance creation' stamp: 'NPM 2/Apr/2020, 3:48:35 am (UTC)'!
 for: aCatalog model: aFinder 
 	
 	^ self
@@ -1342,18 +1379,18 @@ for: aCatalog model: aFinder
 		initializeFor: aCatalog
 		model: aFinder ! !
 
-!SearchBoxEditor methodsFor: 'event handling' stamp: 'HAW 9/Mar/2021 14:42:15'!
+!SearchBoxEditor methodsFor: 'event handling' stamp: 'HAW 9/Mar/2021, 5:42:15 pm (UTC)'!
 forwardToEditor: aKeyboardEvent
 
 	textEditor processKeystrokeEvent: aKeyboardEvent! !
 
-!SearchBoxEditor methodsFor: 'event handling' stamp: 'NPM 3/May/2020 20:52:59'!
+!SearchBoxEditor methodsFor: 'event handling' stamp: 'NPM 3/May/2020, 11:52:59 pm (UTC)'!
 handleKeyStroke: aKeyboardEvent
 
 	^ keyStrokeHandler value: aKeyboardEvent
 ! !
 
-!SearchBoxEditor methodsFor: 'event handling' stamp: 'HAW 9/Mar/2021 14:49:05'!
+!SearchBoxEditor methodsFor: 'event handling' stamp: 'HAW 9/Mar/2021, 5:49:05 pm (UTC)'!
 processKeystrokeEvent: aKeyboardEvent
 
 	(self handleKeyStroke: aKeyboardEvent)
@@ -1361,18 +1398,18 @@ processKeystrokeEvent: aKeyboardEvent
 	
 	self forwardToEditor: aKeyboardEvent! !
 
-!SearchBoxEditor methodsFor: 'initialization' stamp: 'NPM 3/May/2020 20:53:48'!
+!SearchBoxEditor methodsFor: 'initialization' stamp: 'NPM 3/May/2020, 11:53:48 pm (UTC)'!
 initializeFor: aTextEditor handlingKeyStrokesWith: aKeyStrokeHandler 
 
 	textEditor := aTextEditor.
 	keyStrokeHandler := aKeyStrokeHandler.! !
 
-!SearchBoxEditor methodsFor: 'error handling' stamp: 'NPM 2/Apr/2020 00:39:43'!
+!SearchBoxEditor methodsFor: 'error handling' stamp: 'NPM 2/Apr/2020, 3:39:43 am (UTC)'!
 doesNotUnderstand: aMessage
 
 	^ aMessage sendTo: textEditor! !
 
-!SearchBoxEditor class methodsFor: 'installing' stamp: 'HAW 3/Nov/2021 20:29:15'!
+!SearchBoxEditor class methodsFor: 'installing' stamp: 'HAW 3/Nov/2021, 11:29:15 pm (UTC)'!
 installOn: aTextModelMorph handlingKeyStrokesWith: aKeyStrokeHandler  
 	
 	| newEditor textMorph |
@@ -1388,7 +1425,7 @@ installOn: aTextModelMorph handlingKeyStrokesWith: aKeyStrokeHandler
 		put: newEditor.
 	! !
 
-!SearchBoxEditor class methodsFor: 'instance creation' stamp: 'NPM 3/May/2020 20:55:32'!
+!SearchBoxEditor class methodsFor: 'instance creation' stamp: 'NPM 3/May/2020, 11:55:32 pm (UTC)'!
 forEditor: aTextEditor handlingKeyStrokesWith: aKeyStrokeHandler  
 	
 	^ self
@@ -1397,49 +1434,175 @@ forEditor: aTextEditor handlingKeyStrokesWith: aKeyStrokeHandler
 		handlingKeyStrokesWith: aKeyStrokeHandler
 		! !
 
-!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022 12:51:25'!
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:38:04 pm (UTC)'!
+click: aButton
+
+	| position localPosition |
+
+	finder world doOneMinimalCycleNow.
+	position := aButton displayBounds center.
+	localPosition := aButton morphExtent // 2.
+
+	aButton processMouseDown: (self mouseDownAt: position) localPosition: localPosition.
+	aButton processMouseUp: (self mouseUpAt: position) localPosition: localPosition! !
+
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:36:24 pm (UTC)'!
+closeFinder
+
+	finder isInWorld ifTrue: [ finder delete ]! !
+
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:48:52 pm (UTC)'!
+inUIProcess: aBlock
+
+	"A finder asks for the world of the process running it, which only the UI process has. An error there
+	is brought back here, since a debugger on the UI process would leave this one waiting."
+
+	| finished answer errorDescriptions |
+
+	(UISupervisor isUIProcess: Processor activeProcess) ifTrue: [ ^aBlock value ].
+
+	finished := Semaphore new.
+	errorDescriptions := OrderedCollection new.
+	UISupervisor whenUIinSafeState: [
+		[ answer := aBlock on: Error do: [ :anError | errorDescriptions add: anError description ]]
+			ensure: [ finished signal ]].
+	finished wait.
+	errorDescriptions do: [ :anErrorDescription | self error: anErrorDescription ].
+
+	^answer! !
+
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:48:52 pm (UTC)'!
+isCatalogButton: aMorph
+
+	^(aMorph is: #PluggableButtonMorph) and: [ aMorph model isKindOf: CatalogButton ]! !
+
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:38:04 pm (UTC)'!
+mouseDownAt: aPosition
+
+	^MouseButtonEvent new
+		mouseDownPosition: aPosition
+		which: InputSensor mouseButton1
+		buttons: InputSensor mouseButton1
+		hand: hand
+		stamp: Time millisecondClockValue! !
+
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:38:04 pm (UTC)'!
+mouseUpAt: aPosition
+
+	^MouseButtonEvent new
+		mouseUpPosition: aPosition
+		which: InputSensor mouseButton1
+		buttons: 0
+		hand: hand
+		stamp: Time millisecondClockValue! !
+
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:36:24 pm (UTC)'!
+openFinder
+
+	FinderMorph open.
+	finder := FinderMorph current.
+	hand := finder world activeHand! !
+
+!FinderMorphTest methodsFor: 'test support' stamp: 'HAW 19/Sep/2026, 11:48:52 pm (UTC)'!
+unselectedToolbarButton
+
+	^finder
+		findDeepSubmorphThat: [ :aMorph | (self isCatalogButton: aMorph) and: [ aMorph model isSelected not ]]
+		ifAbsent: [ self error: 'The finder has no unselected toolbar button' ]! !
+
+!FinderMorphTest methodsFor: 'tests' stamp: 'HAW 19/Sep/2026, 11:38:04 pm (UTC)'!
+testClickingToolbarButtonKeepsFinderOpen
+
+	| isOpen |
+
+	isOpen := self inUIProcess: [
+		self openFinder.
+		[ hand newKeyboardFocusToOrOwnerOf: self unselectedToolbarButton.
+		finder isInWorld ] ensure: [ self closeFinder ]].
+
+	self assert: isOpen! !
+
+!FinderMorphTest methodsFor: 'tests' stamp: 'HAW 19/Sep/2026, 11:38:04 pm (UTC)'!
+testClickingToolbarButtonLeavesKeyboardFocusOnSearchField
+
+	| isSearchFieldFocused |
+
+	isSearchFieldFocused := self inUIProcess: [
+		self openFinder.
+		[ hand newKeyboardFocusToOrOwnerOf: self unselectedToolbarButton.
+		hand keyboardFocus = finder submorphToFocusKeyboard ] ensure: [ self closeFinder ]].
+
+	self assert: isSearchFieldFocused! !
+
+!FinderMorphTest methodsFor: 'tests' stamp: 'HAW 19/Sep/2026, 11:38:04 pm (UTC)'!
+testClickingToolbarButtonSelectsItsCatalog
+
+	| isSelected |
+
+	isSelected := self inUIProcess: [
+		self openFinder.
+		[ | button |
+		button := self unselectedToolbarButton.
+		self click: button.
+		finder isInWorld and: [ button model isSelected ]] ensure: [ self closeFinder ]].
+
+	self assert: isSelected! !
+
+!FinderMorphTest methodsFor: 'tests' stamp: 'HAW 19/Sep/2026, 11:36:24 pm (UTC)'!
+testGivingKeyboardFocusOutsideFinderClosesIt
+
+	| isOpen |
+
+	isOpen := self inUIProcess: [
+		self openFinder.
+		[ hand newKeyboardFocus: finder world.
+		finder isInWorld ] ensure: [ self closeFinder ]].
+
+	self deny: isOpen! !
+
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022, 3:51:25 pm (UTC)'!
 finderSearchBarResultsColor
 	"Answer the FinderSearchBar color."
 
 	^ self paneBackgroundFrom: self defaultWindowColor lighter.! !
 
-!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022 12:54:26'!
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022, 3:54:26 pm (UTC)'!
 finderSearchBarSearchBoxColor
 	"Answer the FinderSearchBar results color."
 
 	^ self paneBackgroundFrom: self defaultWindowColor lighter lighter.! !
 
-!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022 12:43:06'!
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022, 3:43:06 pm (UTC)'!
 finderSearchBarToolbarButtonColor
 	"Answer the FinderSearchBar toolbar button color."
 
 	^ self buttonColorFrom: self defaultWindowColor.! !
 
-!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022 12:44:42'!
+!Theme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022, 3:44:42 pm (UTC)'!
 finderSearchBarToolbarColor
 	"Answer the FinderSearchBar toolbar button color."
 
 	^ self buttonColorFrom: self defaultWindowColor.! !
 
-!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022 12:51:06'!
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022, 3:51:06 pm (UTC)'!
 finderSearchBarResultsColor
 	"Answer the FinderSearchBar color."
 
 	^ `Color veryVeryLightGray`! !
 
-!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022 12:54:01'!
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022, 3:54:01 pm (UTC)'!
 finderSearchBarSearchBoxColor
 	"Answer the FinderSearchBar results color."
 
 	^ self textPane.! !
 
-!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022 12:42:08'!
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'PTP 2/Nov/2022, 3:42:08 pm (UTC)'!
 finderSearchBarToolbarButtonColor
 	"Answer the FinderSearchBar toolbar button color."
 
 	^ `Color veryLightGray`.! !
 
-!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'HAW 22/Dec/2022 16:55:22'!
+!BrightColorTheme methodsFor: '*Tools-Finder-UI' stamp: 'HAW 22/Dec/2022, 7:55:22 pm (UTC)'!
 finderSearchBarToolbarColor
 	"Answer the FinderSearchBar toolbar button color."
 
