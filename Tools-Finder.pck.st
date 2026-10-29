@@ -1,6 +1,6 @@
 'From Cuis7.9 [latest update: #8184] on 19 September 2026 at 9:12:51 pm'!
 'Description Keep the finder open when one of its buttons is clicked'!
-!provides: 'Tools-Finder' 1 76!
+!provides: 'Tools-Finder' '1.76.0'!
 SystemOrganization addCategory: #'Tools-Finder-Model'!
 SystemOrganization addCategory: #'Tools-Finder-UI'!
 SystemOrganization addCategory: #'Tools-Finder-UI-Model'!
